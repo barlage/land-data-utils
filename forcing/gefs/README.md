@@ -1,6 +1,4 @@
 
-GLEAM water budget estimates
-
 Create a weights file to use for the GEFS ensemble forcing in the ufs-land-driver
 
 To regrid to different grids, use the following steps:
