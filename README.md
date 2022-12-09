@@ -6,6 +6,10 @@ Repository structure:
 - evaluation
   - data
 	  - basins
+	  - domains
+	  - gleam
   - analysis
     - water_budget
     - energy_budget
+- forcing
+  - gefs
