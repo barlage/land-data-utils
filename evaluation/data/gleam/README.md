@@ -52,8 +52,17 @@ ESMF_RegridWeightGen --ignore_degenerate --source ../gleam_SCRIP.nc \
        --destination /scratch2/NCEPDEV/land/data/evaluation/domains/C768/C768_SCRIP.nc \
        --weight GLEAM-C768_bilinear_wts.nc --method bilinear --extrap_method neareststod
 
-4. run regrid_gleam_monthly.ncl in ./CXXX directory
+For the prototype grid
+
+ESMF_RegridWeightGen --ignore_degenerate --source ../gleam_SCRIP.nc \
+       --destination /scratch2/NCEPDEV/land/data/evaluation/domains/prototype/prototype_SCRIP.nc \
+       --weight GLEAM-prototype_bilinear_wts.nc --method bilinear --extrap_method neareststod
+
+
+4. run regrid_gleam_monthly.ncl in ./CXXX directory and ./prototype directory
 
 run the script separately for v3.6a and v3.6b by commently lines
 
-5. can do a quick check using e.g., view_C96.ncl
+this will regrid the data from 2011 for both versions
+
+5. can do a quick check using e.g., view_C96.ncl or ncview prototype grid
