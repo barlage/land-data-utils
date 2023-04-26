@@ -30,7 +30,7 @@ To regrid to different grids, use the following steps:
 
 3. create weights file
 
-run from data/evaluations/basins/CXXX directory
+run from data/evaluations/GLEAM/CXXX directory
 
 Create a bilinear and conservative for C96; can merge them to possibly get a better estimate
 	
@@ -72,3 +72,8 @@ run the script separately for v3.6a and v3.6b by commently lines
 this will regrid the data from 2011 for both versions
 
 5. can do a quick check using e.g., view_C96.ncl or ncview prototype grid
+
+6. compress after creation using
+
+find . -name 'GLEAM_v3.6*' | xargs -L 1 -I {} -t ncks -O -4 -L 1 {} {}
+
