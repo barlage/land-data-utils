@@ -8,7 +8,7 @@ Repository structure:
 	  - `basins` : scripts to create basin masks
 	  - `domains` : scripts to create SCRIP files for destination grids
 	  - `gleam` : scripts to regrid GLEAM hydrology data
-	  - `cpc_precp` : scripts to regrid CPC precipitation data
+	  - `cpc_precip` : scripts to regrid CPC precipitation data
 	  - `mswep` : scripts to regrid MSWEP precipitation data
   - `analysis` : scripts for evaluation
     - `water_budget` : 
