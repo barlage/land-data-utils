@@ -58,8 +58,14 @@ ESMF_RegridWeightGen --ignore_degenerate --source ../gleam_SCRIP.nc \
        --destination /scratch2/NCEPDEV/land/data/evaluation/domains/prototype/prototype_SCRIP.nc \
        --weight GLEAM-prototype_bilinear_wts.nc --method bilinear --extrap_method neareststod
 
+For the hr grid
 
-4. run regrid_gleam_monthly.ncl in ./CXXX directory and ./prototype directory
+ESMF_RegridWeightGen --ignore_degenerate --source ../gleam_SCRIP.nc \
+       --destination /scratch2/NCEPDEV/land/data/evaluation/domains/hr/hr_SCRIP.nc \
+       --weight GLEAM-hr_bilinear_wts.nc --method bilinear --extrap_method neareststod
+
+
+4. run regrid_gleam_monthly.ncl in ./CXXX directory or ./prototype or ./hr directory
 
 run the script separately for v3.6a and v3.6b by commently lines
 
