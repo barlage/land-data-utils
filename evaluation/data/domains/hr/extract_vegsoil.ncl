@@ -20,6 +20,11 @@ lon1d = hr_file->lon_0
     vdata&lat = lat
     vdata&lon = lon
   sdata = vdata
+  edata = new((/dimsizes(lat1d),dimsizes(lon1d)/), float)
+    edata!0 = "lat"
+    edata!1 = "lon"
+    edata&lat = lat
+    edata&lon = lon
 
   print(getfilevarnames(hr_file))
 
@@ -29,13 +34,17 @@ lon1d = hr_file->lon_0
   indata = (/ hr_file->SOTYP_P0_L1_GGA0 /)
   sdata = tointeger(indata)
 
+  indata = (/ hr_file->HGT_P0_L1_GGA0 /)
+  edata = (/ indata /)
+
   outname = "/scratch2/NCEPDEV/land/data/evaluation/domains/hr/hr1_vegsoil.nc"
    system("if [ -e "+outname+" ]; then rm -f "+outname+ ";fi")
   outfile = addfile(outname,"c")
-  outfile->lat = lat
-  outfile->lon = lon
   outfile->vegetation_type = vdata
   outfile->soil_type = sdata
+  outfile->elevation = edata
+;  outfile->lat = lat
+;  outfile->lon = lon
   
 
 end
