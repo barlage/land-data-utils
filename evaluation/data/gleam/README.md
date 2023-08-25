@@ -42,6 +42,10 @@ ESMF_RegridWeightGen --ignore_degenerate --source ../gleam_SCRIP.nc \
        --destination /scratch2/NCEPDEV/land/data/evaluation/domains/C96/C96_SCRIP.nc \
        --weight GLEAM-C96_conserve_wts.nc --method conserve --ignore_unmapped
 
+ESMF_RegridWeightGen --ignore_degenerate --source ../gleam_SCRIP.nc \
+       --destination /scratch2/NCEPDEV/land/data/evaluation/domains/C96_conus/C96_conus_SCRIP.nc \
+       --weight GLEAM-C96_conus_conserve_wts.nc --method conserve --ignore_unmapped
+
 For C384 and C786, only create a bilinear version
 	
 ESMF_RegridWeightGen --ignore_degenerate --source ../gleam_SCRIP.nc \
@@ -71,7 +75,9 @@ run the script separately for v3.6a and v3.6b by commently lines
 
 this will regrid the data from 2011 for both versions
 
-5. can do a quick check using e.g., view_C96.ncl or ncview prototype grid
+for hr, only do 2019-2021
+
+5. can do a quick check using e.g., view_C96.ncl or ncview prototype or hr grid
 
 6. compress after creation using
 
