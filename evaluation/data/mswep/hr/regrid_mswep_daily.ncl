@@ -3,24 +3,22 @@ load "$NCARG_ROOT/lib/ncarg/nclscripts/esmf/ESMF_regridding.ncl"
 
 begin
 
-prototype_filename = "/scratch2/NCEPDEV/land/data/evaluation/domains/prototype/prototype8_vegsoil.nc"
-prototype_file = addfile(prototype_filename, "r")
-  prototype_lat = prototype_file->lat
-  prototype_lon = prototype_file->lon
+hr_filename = "/scratch2/NCEPDEV/land/data/evaluation/domains/hr/hr1_vegsoil.nc"
+hr_file = addfile(hr_filename, "r")
+  hr_lat = hr_file->lat
+  hr_lon = hr_file->lon
 
-weights = "/scratch2/NCEPDEV/land/data/evaluation/MSWEP/prototype/MSWEP-prototype_conserve_wts.nc"
+weights = "/scratch2/NCEPDEV/land/data/evaluation/MSWEP/hr/MSWEP-hr_nearest_wts.nc"
 
 Opt                = True
 ;Opt@PrintTimings   = True
 
-do iyyyy = 2019, 2022
+do iyyyy = 2019, 2019
 
+  daymin = 335
   daymax = 365
-  if(iyyyy .eq. 2020) then
-    daymax = 366
-  end if
 
-do iddd = 1, daymax
+do iddd = daymin, daymax
 
   print("Starting: "+iyyyy+"-"+tostring_with_format(iddd,"%3.3d"))
 
@@ -34,8 +32,8 @@ do iddd = 1, daymax
 
   mswep_regrid!0 = "lat"
   mswep_regrid!1 = "lon"
-  mswep_regrid&lat = prototype_lat
-  mswep_regrid&lon = prototype_lon
+  mswep_regrid&lat = hr_lat
+  mswep_regrid&lon = hr_lon
   
 ;;;;;;;;;;;;;;;;;;;;
 
