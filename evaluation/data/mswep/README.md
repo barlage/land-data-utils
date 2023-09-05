@@ -36,7 +36,17 @@ ESMF_RegridWeightGen --ignore_degenerate --source ../mswep_SCRIP.nc \
        --destination /scratch2/NCEPDEV/land/data/evaluation/domains/prototype/prototype_SCRIP.nc \
        --weight MSWEP-prototype_conserve_wts.nc --method conserve
 
+run from data/evaluation/MSWEP/hr directory
+	
+ESMF_RegridWeightGen --ignore_degenerate --source ../mswep_SCRIP.nc \
+       --destination /scratch2/NCEPDEV/land/data/evaluation/domains/hr/hr_SCRIP.nc \
+       --weight MSWEP-hr_nearest_wts.nc --method neareststod
+
 4. run the following scripts in ./CXXX or ./prototype directory
 
 ncl regrid_mswep_daily.ncl
 ncl regrid_mswep_monthly.ncl
+
+5. compress after creation (currently not done because these are pretty small)
+
+find . -name 'mswep_hr*' | xargs -L 1 -I {} -t ncks -O -4 -L 1 {} {}

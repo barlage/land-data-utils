@@ -40,4 +40,10 @@ ESMF_RegridWeightGen --ignore_degenerate --source ../grdc_SCRIP.nc \
        --destination /scratch2/NCEPDEV/land/data/evaluation/domains/prototype/prototype_SCRIP.nc \
        --weight GRDC-prototype_nearest_wts.nc --method neareststod
 
-4. run regrid_grdc.ncl in ./CXXX or ./prototype directory
+run from data/evaluations/basins/hr directory
+	
+ESMF_RegridWeightGen --ignore_degenerate --source ../grdc_SCRIP.nc \
+       --destination /scratch2/NCEPDEV/land/data/evaluation/domains/hr/hr_SCRIP.nc \
+       --weight GRDC-hr_nearest_wts.nc --method neareststod
+
+4. run regrid_grdc.ncl in ./CXXX or ./prototype or ./hr directory
