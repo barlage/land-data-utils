@@ -3,7 +3,7 @@ GLEAM water budget estimates
 
 https://www.gleam.eu
 
-Downloaded v3.6a and v3.6b using sftp
+Downloaded v3.6a and v3.6b using sftp (20231004 updated with v3.7b and v3.8a)
 
     Actual Evaporation (E) 
     Soil Evaporation (Eb)  
@@ -16,8 +16,8 @@ Downloaded v3.6a and v3.6b using sftp
     Root-Zone Soil Moisture (SMroot)
     Surface Soil Moisture (SMsurf)
 
-Daily data for 2011 - 2021
-Monthly data from 1980 - 2021 (v3.6a) and 2003 - 2021 (v3.6b)
+Daily data for 2011 - 2021 (through 2022 in v3.7b and v3.8a)
+Monthly data from 1980 - 2021 (v3.6a) and 2003 - 2021 (v3.6b) (through 2022 in v3.7b and v3.8a)
 
 Data are on a regular 0.25 degree global grid.
 
@@ -71,7 +71,7 @@ ESMF_RegridWeightGen --ignore_degenerate --source ../gleam_SCRIP.nc \
 
 4. run regrid_gleam_monthly.ncl in ./CXXX directory or ./prototype or ./hr directory
 
-run the script separately for v3.6a and v3.6b by commently lines
+run the script separately for v3.6a and v3.6b by commenting lines
 
 this will regrid the data from 2011 for both versions
 
