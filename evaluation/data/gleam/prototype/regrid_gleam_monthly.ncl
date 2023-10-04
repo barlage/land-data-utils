@@ -20,13 +20,13 @@ varlongname = varlongnames(ivar)
 
 print("Starting: "+varlongname)
 
-filename = "/scratch2/NCEPDEV/land/data/evaluation/GLEAM/orig/"+var2process+"/v3.6b/"+var2process+"_2003-2021_GLEAM_v3.6b_MO.nc"
-outname  = "/scratch2/NCEPDEV/land/data/evaluation/GLEAM/prototype/GLEAM_v3.6b_"+var2process+"_prototype.nc"
-tstart = 96  ; jan 2011
+;filename = "/scratch2/NCEPDEV/land/data/evaluation/GLEAM/orig/"+var2process+"/v3.7b/"+var2process+"_2003-2022_GLEAM_v3.7b_MO.nc"
+;outname  = "/scratch2/NCEPDEV/land/data/evaluation/GLEAM/prototype/monthly/GLEAM_v3.7b_"+var2process+"_prototype.nc"
+;tstart = 96  ; jan 2011
 
-;filename = "/scratch2/NCEPDEV/land/data/evaluation/GLEAM/orig/"+var2process+"/v3.6a/"+var2process+"_1980-2021_GLEAM_v3.6a_MO.nc"
-;outname  = "/scratch2/NCEPDEV/land/data/evaluation/GLEAM/prototype/GLEAM_v3.6a_"+var2process+"_prototype.nc"
-;tstart = 372  ; jan 2011
+filename = "/scratch2/NCEPDEV/land/data/evaluation/GLEAM/orig/"+var2process+"/v3.8a/"+var2process+"_1980-2022_GLEAM_v3.8a_MO.nc"
+outname  = "/scratch2/NCEPDEV/land/data/evaluation/GLEAM/prototype/monthly/GLEAM_v3.8a_"+var2process+"_prototype.nc"
+tstart = 372  ; jan 2011
 
 weights = "/scratch2/NCEPDEV/land/data/evaluation/GLEAM/prototype/GLEAM-prototype_bilinear_wts.nc"
 
@@ -34,7 +34,9 @@ Opt                = True
     
   infile = addfile(filename,"r")
 
-  gleam_time = infile->time(tstart:)
+  in_time = infile->time(tstart:)
+  gleam_time = (/ toint(in_time) /)     ; cd_calendar cant handle int64
+  gleam_time@units = in_time@units
   print("gleam_time: "+gleam_time(0))
 
   utc_date = cd_calendar(gleam_time,0)
