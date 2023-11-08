@@ -3,7 +3,7 @@
 
 begin
 
-infile = addfile("/scratch2/NCEPDEV/land/data/evaluation/METAR_SYNOP/dinural/metar_diurnal.nc", "r")
+infile = addfile("/scratch2/NCEPDEV/land/data/evaluation/METAR_SYNOP/diurnal/metar_diurnal.nc", "r")
 screen = False
 
 mm_to_plot = 5

@@ -148,14 +148,14 @@ do imm = 1, 12
 
     do ihh = 0, 23
       if(num(.not.ismissing(t2_monthly_diurnal(istation,3:12,imm-1,ihh))) .gt. 0) then
-        t2_monthly_diurnal_climo(istation,imm-1,ihh) = (/ avg(t2_monthly_diurnal(istation,:,imm-1,ihh)) /)
+        t2_monthly_diurnal_climo(istation,imm-1,ihh) = (/ avg(t2_monthly_diurnal(istation,3:12,imm-1,ihh)) /)
         t2_climo_count(istation,imm-1) = t2_climo_count(istation,imm-1) + num(.not.ismissing(t2_monthly_diurnal(istation,3:12,imm-1,ihh)))
       end if
     end do
 
     do ihh = 0, 23
       if(num(.not.ismissing(td2_monthly_diurnal(istation,3:12,imm-1,ihh))) .gt. 0) then
-        td2_monthly_diurnal_climo(istation,imm-1,ihh) = (/ avg(td2_monthly_diurnal(istation,:,imm-1,ihh)) /)
+        td2_monthly_diurnal_climo(istation,imm-1,ihh) = (/ avg(td2_monthly_diurnal(istation,3:12,imm-1,ihh)) /)
         td2_climo_count(istation,imm-1) = td2_climo_count(istation,imm-1) + num(.not.ismissing(td2_monthly_diurnal(istation,3:12,imm-1,ihh)))
       end if
     end do
@@ -167,7 +167,7 @@ end do
  t2_climo_count =  t2_climo_count / 24.0
 td2_climo_count = td2_climo_count / 24.0
 
-outname = "/scratch2/NCEPDEV/land/data/evaluation/METAR_SYNOP/dinural/metar_diurnal.nc"
+outname = "/scratch2/NCEPDEV/land/data/evaluation/METAR_SYNOP/diurnal/metar_diurnal.nc"
   system("if [ -e "+outname+" ]; then rm -f "+outname+ ";fi")
   outfile = addfile(outname,"c")
 
