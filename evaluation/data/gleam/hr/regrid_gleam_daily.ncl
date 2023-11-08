@@ -11,7 +11,7 @@ tends   = (/ 30, 59, 90,120,151,181,212,243,273,304,334,365/)
 ;tstarts = (/  0, 31, 59, 90,120,151,181,212,243,273,304,334/)  ; 0-based non-leap year
 ;tends   = (/ 30, 58, 89,119,150,180,211,242,272,303,333,364/)
 
-version = "v3.6a"
+version = "v3.7b"
 
 vars2process = (/"E","Eb","Ei","Es","Et","S","SMroot","SMsurf"/)
 
@@ -38,7 +38,9 @@ do ivar = 0, 7
 
   do imm = 6, 9  ; 1-based
 
-    gleam_time = infile->time(tstarts(imm-1):tends(imm-1))
+    in_time = infile->time(tstarts(imm-1):tends(imm-1))
+    gleam_time = (/ toint(in_time) /)     ; cd_calendar cant handle int64
+    gleam_time@units = in_time@units
     print("gleam_time: "+gleam_time(0))
 
     utc_date = cd_calendar(gleam_time,0)
@@ -77,6 +79,7 @@ do ivar = 0, 7
     delete(gleam)
     delete(gleam_regrid)
     delete(gleam_time)
+    delete(in_time)
     delete(time)
     delete(utc_date)
 
