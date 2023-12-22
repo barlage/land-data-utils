@@ -1,12 +1,12 @@
 begin
 
-pts_scrip_filename = "/scratch2/NCEPDEV/land/data/evaluation/domains/C768/fix_20231027/C768_SCRIP.nc"
+pts_scrip_filename = "/scratch2/NCEPDEV/land/data/evaluation/domains/C1152/fix_20231027/C1152_SCRIP.nc"
 
-fixpath = "/scratch1/NCEPDEV/global/glopara/fix/orog/20231027/C768/"
+fixpath = "/scratch1/NCEPDEV/global/glopara/fix/orog/20231027/C1152/"
 
 nloc = -1
 
-maxdim = 768*768*6
+maxdim = 1152*1152*6
 latitude           = new(maxdim,double)
 latitude!0         = "location"
 longitude          = latitude
@@ -19,8 +19,8 @@ do itile = 1,6
 
 print("Starting tile: "+itile)
 
- mask_file = addfile(fixpath+"C768.mx025_oro_data.tile"+itile+".nc","r")
- corner_file = addfile(fixpath+"C768_grid.tile"+itile+".nc","r")
+ mask_file = addfile(fixpath+"C1152.mx025_oro_data.tile"+itile+".nc","r")
+ corner_file = addfile(fixpath+"C1152_grid.tile"+itile+".nc","r")
 
  inmask = mask_file->land_frac 
  inlat  = mask_file->geolat
