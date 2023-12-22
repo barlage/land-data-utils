@@ -1,8 +1,8 @@
 begin
 
-pts_scrip_filename = "/scratch2/NCEPDEV/land/data/evaluation/domains/C96_conus/C96_conus_SCRIP.nc"
+pts_scrip_filename = "/scratch2/NCEPDEV/land/data/evaluation/domains/C96_conus/fix_20231027/C96_conus_SCRIP.nc"
 
-fixpath = "/scratch2/NCEPDEV/land/data/fix/C96.mx100_frac/"
+fixpath = "/scratch1/NCEPDEV/global/glopara/fix/orog/20231027/C96/"
 
 nloc = -1
 
@@ -19,7 +19,7 @@ do itile = 1,6
 
 print("Starting tile: "+itile)
 
- mask_file = addfile(fixpath+"oro_C96.mx100.tile"+itile+".nc","r")
+ mask_file = addfile(fixpath+"C96.mx100_oro_data.tile"+itile+".nc","r")
  corner_file = addfile(fixpath+"C96_grid.tile"+itile+".nc","r")
 
  inmask = mask_file->land_frac 

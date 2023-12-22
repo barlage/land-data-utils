@@ -1,8 +1,8 @@
 begin
 
-pts_scrip_filename = "/scratch2/NCEPDEV/land/data/evaluation/domains/C384/C384_SCRIP.nc"
+pts_scrip_filename = "/scratch2/NCEPDEV/land/data/evaluation/domains/C384/fix_20231027/C384_SCRIP.nc"
 
-fixpath = "/scratch2/NCEPDEV/land/data/fix/C384.mx025_frac/"
+fixpath = "/scratch1/NCEPDEV/global/glopara/fix/orog/20231027/C384/"
 
 nloc = -1
 
@@ -19,7 +19,7 @@ do itile = 1,6
 
 print("Starting tile: "+itile)
 
- mask_file = addfile(fixpath+"oro_C384.mx025.tile"+itile+".nc","r")
+ mask_file = addfile(fixpath+"C384.mx025_oro_data.tile"+itile+".nc","r")
  corner_file = addfile(fixpath+"C384_grid.tile"+itile+".nc","r")
 
  inmask = mask_file->land_frac 
