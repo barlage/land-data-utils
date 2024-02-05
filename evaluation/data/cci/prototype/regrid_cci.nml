@@ -1,0 +1,6 @@
+&regrid_cci_nml
+ cgrid="prototype"
+ source_path="/scratch2/NCEPDEV/land/data/evaluation/CCI/orig/"
+ weights_path="/scratch2/NCEPDEV/land/data/evaluation/CCI/prototype/"
+ destination_path="/scratch2/NCEPDEV/land/data/evaluation/CCI/prototype/"
+/
