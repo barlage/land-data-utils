@@ -53,7 +53,9 @@ ESMF_RegridWeightGen --ignore_degenerate --source ../cci_SCRIP.nc \
        --weight CCI-hr_bilinear_wts.nc --method bilinear --extrap_method neareststod
 
 
-4. regrid step to be provided by Youlong
+4. regrid step
 
+For each individual cgrid type, C96_conus, C96, C384, C768, C1152, hr, and prototype, go to that directory, do "make" to build the excuetable, and then run script interactively or submit a job via copying submit_regrid.sh to that directory.
 
+Michael Barlage and Youlong Xia, NCEP/EMC, 16 January 2024 
 

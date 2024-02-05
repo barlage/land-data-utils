@@ -1,0 +1,6 @@
+&regrid_cci_nml
+ cgrid="C384"
+ source_path="/scratch2/NCEPDEV/land/data/evaluation/CCI/orig/"
+ weights_path="/scratch2/NCEPDEV/land/data/evaluation/CCI/C384/"
+ destination_path="/scratch2/NCEPDEV/land/data/evaluation/CCI/C384/"
+/
