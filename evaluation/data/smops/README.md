@@ -1,9 +1,9 @@
 
 SMOPS soil moisture
 
-Download information: 
+Download information: SMOPS data was first downloaded from https://www.avl.class.noaa.gov/saa/products/search%3Fsub_id%3D0%26datatype_family%3DSMOPS, and then a shell script was used to extracted belended soil moisture and uncertainty only to reduce data size.
 
-Daily data for 
+Daily data for 2018 - 2022
 
 Data are on a regular 0.25 degree global grid.
 
@@ -53,10 +53,13 @@ ESMF_RegridWeightGen --ignore_degenerate --source ../smops_SCRIP.nc \
        --weight SMOPS-hr_bilinear_wts.nc --method bilinear --extrap_method neareststod
 
 
-4. regrid step to be provided by Youlong
-
+4. regrid step
 
 /test contains an ncl regrid script to test if the C96 scrip is correct, use view_C96.ncl to visualize
+
+For each individual cgrid type, C96_conus, C96, C384, C768, C1152, hr, and prototype, go to that directory, do "make clean" if excutable file exists. After that, do "make" to build the excuetable, and then run script interactively or submit a job via copying submit_regrid.sh to that directory.
+
+Michael Barlage and Youlong Xia, NCEP/EMC, 18 January 2024
 
 
 
