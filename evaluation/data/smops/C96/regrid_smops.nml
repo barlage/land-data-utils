@@ -1,0 +1,6 @@
+&regrid_smops_nml
+ cgrid="C96"
+ source_path="/scratch2/NCEPDEV/land/data/evaluation/SMOPS/orig/"
+ weights_path="/scratch2/NCEPDEV/land/data/evaluation/SMOPS/C96/"
+ destination_path="/scratch2/NCEPDEV/land/data/evaluation/SMOPS/C96/"
+/

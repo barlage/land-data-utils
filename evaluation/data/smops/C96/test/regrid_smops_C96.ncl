@@ -24,4 +24,3 @@ Opt                = True
   outfile->Blended_SM = var_regrid
 
 end
-
