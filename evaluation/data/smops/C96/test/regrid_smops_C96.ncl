@@ -10,7 +10,7 @@ Opt                = True
 ;Opt@Debug          = True
 ;Opt@PrintTimings   = True
 
-  infile = addfile("/scratch2/NCEPDEV/land/data/evaluation/SMOPS/orig/NPR_SMOPS_CMAP_D20200801.nc","r")
+  infile = addfile("/scratch2/NCEPDEV/land/data/evaluation/SMOPS/orig/NPR_SMOPS_CMAP_D20200801_extn.nc","r")
   
 ;;;;;;;;;;;;;;;;;;;;
 

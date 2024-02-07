@@ -30,7 +30,7 @@ begin
     wks = gsn_open_wks("png","blah") 
   end if
 
-  infile = addfile("/scratch2/NCEPDEV/land/Michael.Barlage/forcing/C96/vector/ufs-land_C96_hr3_corners.nc","r")
+  infile = addfile("/scratch2/NCEPDEV/land/data/evaluation/domains/C96/fix_20231027/ufs-land_C96_hr3_corners.nc","r")
   
   lat  = infile->latitude
   lon  = infile->longitude
