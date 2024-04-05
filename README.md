@@ -14,8 +14,12 @@ Repository structure:
 	  - `smops` : scripts to regrid SMOPS soil moisture data
 	  - `cci` : scripts to regrid CCI soil moisture data
 	  - `metar` : scripts to do data manipulation of METAR location data
+	  - `ceres` : scripts to regrid CERES data
   - `analysis` : scripts for evaluation
     - `water_budget` : 
     - `energy_budget` : scripts to analyze energy budget
 - `forcing` : scripts to manipulate and regrid forcing data
   - `gefs` : scripts to create weights file for land model regridding
+- `DA` : scripts for DA
+  - `data` : scripts for creating and manipulating DA data
+	  - `MADIS` : scripts to process MADIS obs
