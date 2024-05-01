@@ -4,7 +4,7 @@ Modify `create_inputs.sh` for your case. Submit script using:
 
 `sbatch create_inputs.sh`
 
-Some stardard grids may already be created here:
+Some standard grids may already be created here:
 
 `/scratch2/NCEPDEV/land/data/ufs-land-driver/vector_inputs`
 
