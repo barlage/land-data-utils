@@ -4,7 +4,7 @@ Modify `create_weights.sh` for your case. Submit script using:
 
 `sbatch create_weights.sh`
 
-Some stardard grids may already be created here:
+Some standard grids may already be created here:
 
 `/scratch2/NCEPDEV/land/data/ufs-land-driver/weights`
 
