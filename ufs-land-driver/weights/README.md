@@ -18,7 +18,7 @@ Some standard grids may already be created here:
 
 `datm_source`  : data atmosphere source [ERA5,GDAS,CDAS]
 
-`datm_source_file` : a single datm_source file, e.g., "/scratch2/NCEPDEV/land/data/forcing/era5/datm/orig/ERA5_forcing_2022-12-31.nc" 
+`datm_source_file` : a single datm_source file, e.g., "/scratch2/NCEPDEV/land/data/ufs-land-driver/datm/ERA5/orig/ERA5_forcing_2022-12-31.nc" 
 
 `interpolation_method` : ESMF regrid method [bilinear,neareststod,nearestdtos,conserve]
 

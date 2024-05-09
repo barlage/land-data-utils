@@ -1,0 +1,16 @@
+0 ncl regrid_gdas_C768.ncl yyyy_beg=2015 yyyy_end=2015 mm_beg=2 mm_end=6
+1 ncl regrid_gdas_C768.ncl yyyy_beg=2015 yyyy_end=2015 mm_beg=7 mm_end=12
+2 ncl regrid_gdas_C768.ncl yyyy_beg=2016 yyyy_end=2016 mm_beg=1 mm_end=6
+3 ncl regrid_gdas_C768.ncl yyyy_beg=2016 yyyy_end=2016 mm_beg=7 mm_end=12
+4 ncl regrid_gdas_C768.ncl yyyy_beg=2017 yyyy_end=2017 mm_beg=1 mm_end=6
+5 ncl regrid_gdas_C768.ncl yyyy_beg=2017 yyyy_end=2017 mm_beg=7 mm_end=12
+6 ncl regrid_gdas_C768.ncl yyyy_beg=2018 yyyy_end=2018 mm_beg=1 mm_end=6
+7 ncl regrid_gdas_C768.ncl yyyy_beg=2018 yyyy_end=2018 mm_beg=7 mm_end=12
+8 ncl regrid_gdas_C768.ncl yyyy_beg=2019 yyyy_end=2019 mm_beg=1 mm_end=6
+9 ncl regrid_gdas_C768.ncl yyyy_beg=2019 yyyy_end=2019 mm_beg=7 mm_end=12
+10 ncl regrid_gdas_C768.ncl yyyy_beg=2020 yyyy_end=2020 mm_beg=1 mm_end=6
+11 ncl regrid_gdas_C768.ncl yyyy_beg=2020 yyyy_end=2020 mm_beg=7 mm_end=12
+12 ncl regrid_gdas_C768.ncl yyyy_beg=2021 yyyy_end=2021 mm_beg=1 mm_end=6
+13 ncl regrid_gdas_C768.ncl yyyy_beg=2021 yyyy_end=2021 mm_beg=7 mm_end=12
+14 ncl regrid_gdas_C768.ncl yyyy_beg=2022 yyyy_end=2022 mm_beg=1 mm_end=6
+15 ncl regrid_gdas_C768.ncl yyyy_beg=2022 yyyy_end=2022 mm_beg=7 mm_end=12

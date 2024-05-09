@@ -63,7 +63,7 @@ output_path=$res"/"
 weights_filename=$datm_source"-"$grid"_"$interpolation_method"_wts.nc"
 destination_scrip_file=$destination_scrip_path"/"$res"/ufs-land_"$grid"_SCRIP.nc"
 
-if [ -d output_path ]; then 
+if [ -d $output_path ]; then 
   echo "BEWARE: output_path directory exists and overwriting is allowed"
 else
   mkdir -p $output_path
