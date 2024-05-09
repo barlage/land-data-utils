@@ -20,17 +20,17 @@ Some standard grids may already be created here:
 
 `datm_source`  : data atmosphere source [ERA5,GDAS,CDAS]
 
-`datm_source_path` : datm_source files path, e.g., "/scratch2/NCEPDEV/land/data/ufs-land-driver/datm/ERA5/orig/" 
+`datm_source_path` : datm_source files path, e.g., `"/scratch2/NCEPDEV/land/data/ufs-land-driver/datm/ERA5/orig/" `
 
-`elevation_source_filename` : source data elevation file, e.g., "/scratch2/NCEPDEV/land/data/ufs-land-driver/datm/ERA5/elevation/e5.oper.invariant.128_129_z.ll025sc.1979010100_1979010100.nc"
+`elevation_source_filename` : source data elevation file, e.g., `"/scratch2/NCEPDEV/land/data/ufs-land-driver/datm/ERA5/elevation/e5.oper.invariant.128_129_z.ll025sc.1979010100_1979010100.nc"`
 
-`weights_path` : weights files path, e.g., "/scratch2/NCEPDEV/land/data/ufs-land-driver/weights/" 
+`weights_path` : weights files path (created in Step 2), e.g., `"/scratch2/NCEPDEV/land/data/ufs-land-driver/weights/"`
 
 `interpolation_method` : ESMF regrid method [bilinear,neareststod,nearestdtos,conserve]
 
-`static_file_path` : ufs-land-driver static file path, e.g., "/scratch2/NCEPDEV/land/data/ufs-land-driver/vector_inputs/" 
+`static_file_path` : ufs-land-driver static file path (created in Step 1), e.g., `"/scratch2/NCEPDEV/land/data/ufs-land-driver/vector_inputs/"` 
 
-`regrid_tasks_file` : file with all the individual commands to create datm files, e.g., "regrid-tasks.1990-2009.ERA5" 
+`regrid_tasks_file` : file with all the individual commands to create datm files, e.g., `"regrid-tasks.1990-2009.ERA5"` 
 
 Outputs in current directory `atm_res`.`ocn_res` (`C96.mx100` example):
 
