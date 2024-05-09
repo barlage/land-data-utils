@@ -62,7 +62,7 @@ else
   output_path=$atm_res.$ocn_res.$grid_extent"/"
 fi
 
-if [ -d output_path ]; then 
+if [ -d $output_path ]; then 
   echo "ERROR: directory $output_path exists and overwriting is prevented"
   echo "ERROR: remove $output_path and resubmit"
   exit 2
