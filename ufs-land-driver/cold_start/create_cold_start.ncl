@@ -125,6 +125,7 @@ date = (/ ic_date(0:18) /)  ; stringtochar puts a null at end
 
 latitude  = (/ static_file->latitude  /)
 longitude = (/ static_file->longitude /)
+vegetation_type = (/ static_file->vegetation_category /)
 
 ; snow and canopy water set to zero
 
@@ -132,13 +133,13 @@ snow_water_equivalent = 0.0
 snow_depth            = 0.0
 canopy_water          = 0.0
 
-; all temperatures set to 2m temperature
+; all temperatures set to 2m temperature, limit glacier to freezing
 
-skin_temperature      = temperature_in
-soil_temperature(0,:) = temperature_in
-soil_temperature(1,:) = temperature_in
-soil_temperature(2,:) = temperature_in
-soil_temperature(3,:) = temperature_in
+skin_temperature = where(vegetation_type.eq.15.and.temperature_in.gt.273.16,273.16,temperature_in)
+soil_temperature(0,:) = where(vegetation_type.eq.15.and.temperature_in.gt.273.16,273.16,temperature_in)
+soil_temperature(1,:) = where(vegetation_type.eq.15.and.temperature_in.gt.273.16,273.16,temperature_in)
+soil_temperature(2,:) = where(vegetation_type.eq.15.and.temperature_in.gt.273.16,273.16,temperature_in)
+soil_temperature(3,:) = where(vegetation_type.eq.15.and.temperature_in.gt.273.16,273.16,temperature_in)
 
 ; arbitrarily set soil moisture to 0.3
 
