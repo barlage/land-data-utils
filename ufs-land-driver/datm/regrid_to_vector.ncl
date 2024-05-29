@@ -135,7 +135,7 @@ do idd = 1, numdays
 
   var_regrid = ESMF_regrid_with_weights(data,weights_filename,Opt)
   
-  precipitation_bilinear = (/ var_regrid /)
+  precipitation = (/ var_regrid /)
   
 ;;;;;;;;;;;;;;;;;;;;
 

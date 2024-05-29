@@ -16,13 +16,13 @@
 #SBATCH --ntasks=40
 #
 # -- Specify a maximum wallclock
-# -- C96  : ~45 minutes
-# -- C192 : ~45 minutes
-# -- C384 : ~2 hours
-# -- C768 : ~2 hours
+# -- C96  : ~25 minutes  C96 conus : ~25 minutes
+# -- C192 : ~30 minutes
+# -- C384 : ~1 hours
+# -- C768 : ~1.5 hours
 # -- C1152: ~3 hours
 #
-#SBATCH --time=0:01:00
+#SBATCH --time=0:25:00
 
 module purge
 module load ncl/6.6.2
