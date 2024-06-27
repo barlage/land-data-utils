@@ -30,7 +30,7 @@ ocn_res="mx100"
 grid_version="hr3"
 data_source="CERES"
 data_source_file="/scratch2/NCEPDEV/land/data/evaluation/CERES/orig/CERES_SW_LW_20110401-20231231.nc"
-interpolation_method="bilinear"
+interpolation_method="neareststod"
 destination_scrip_path="/scratch2/NCEPDEV/land/data/ufs-land-driver/vector_inputs/"
 grid_extent="global"
 
