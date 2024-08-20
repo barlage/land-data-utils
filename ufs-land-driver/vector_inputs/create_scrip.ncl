@@ -3,24 +3,38 @@
 
 begin
 
-if(grid_extent.eq."global") then
-    corners_filename      = output_path+"ufs-land_"+atm_res+"."+ocn_res+"_"+grid_version+"_corners.nc"
-  pts_scrip_filename      = output_path+"ufs-land_"+atm_res+"."+ocn_res+"_"+grid_version+"_SCRIP.nc"
-  pts_scrip_filename_bare = output_path+"ufs-land_"+atm_res+"."+ocn_res+"_"+grid_version+"_SCRIP_bare.nc"
-  pts_scrip_filename_snow = output_path+"ufs-land_"+atm_res+"."+ocn_res+"_"+grid_version+"_SCRIP_snow.nc"
-  pts_scrip_filename_veg  = output_path+"ufs-land_"+atm_res+"."+ocn_res+"_"+grid_version+"_SCRIP_veg.nc"
-     static_filename      = output_path+"ufs-land_"+atm_res+"."+ocn_res+"_"+grid_version+"_static_fields.nc"
-elseif(grid_extent.eq."conus") then
-    corners_filename      = output_path+"ufs-land_"+atm_res+"."+ocn_res+"."+grid_extent+"_"+grid_version+"_corners.nc"
-  pts_scrip_filename      = output_path+"ufs-land_"+atm_res+"."+ocn_res+"."+grid_extent+"_"+grid_version+"_SCRIP.nc"
-  pts_scrip_filename_bare = output_path+"ufs-land_"+atm_res+"."+ocn_res+"."+grid_extent+"_"+grid_version+"_SCRIP_bare.nc"
-  pts_scrip_filename_snow = output_path+"ufs-land_"+atm_res+"."+ocn_res+"."+grid_extent+"_"+grid_version+"_SCRIP_snow.nc"
-  pts_scrip_filename_veg  = output_path+"ufs-land_"+atm_res+"."+ocn_res+"."+grid_extent+"_"+grid_version+"_SCRIP_veg.nc"
-     static_filename      = output_path+"ufs-land_"+atm_res+"."+ocn_res+"."+grid_extent+"_"+grid_version+"_static_fields.nc"
-else
-  print("problem with grid_extent in create_scrip")
-  exit
-end if
+  atm_res      = keyword_values("regrid_parameter_assignment","atm_res"     ,"string")
+  ocn_res      = keyword_values("regrid_parameter_assignment","ocn_res"     ,"string")
+  grid_version = keyword_values("regrid_parameter_assignment","grid_version","string")
+  output_path  = keyword_values("regrid_parameter_assignment","output_path" ,"string")
+  fixfile_path = keyword_values("regrid_parameter_assignment","fixfile_path","string")
+  grid_extent  = keyword_values("regrid_parameter_assignment","grid_extent" ,"string")
+
+  if(grid_extent.eq."global") then
+    if(ocn_res.eq."mx000") then
+      file_part = atm_res+"_"+grid_version
+    else
+      file_part = atm_res+"."+ocn_res+"_"+grid_version
+    end if
+  elseif(grid_extent.eq."conus") then
+    file_part = atm_res+"."+ocn_res+"."+grid_extent+"_"+grid_version
+  elseif(grid_extent.eq."regional") then
+    if(ocn_res.eq."mx000") then
+      file_part = atm_res+"_"+grid_version+"_regional"
+    else
+      file_part = atm_res+"."+ocn_res+"_"+grid_version+"_regional"
+    end if
+  else
+    print("problem with grid_extent in extract_corners")
+    exit
+  end if
+
+    corners_filename      = output_path+"ufs-land_"+file_part+"_corners.nc"
+  pts_scrip_filename      = output_path+"ufs-land_"+file_part+"_SCRIP.nc"
+  pts_scrip_filename_bare = output_path+"ufs-land_"+file_part+"_SCRIP_bare.nc"
+  pts_scrip_filename_snow = output_path+"ufs-land_"+file_part+"_SCRIP_snow.nc"
+  pts_scrip_filename_veg  = output_path+"ufs-land_"+file_part+"_SCRIP_veg.nc"
+     static_filename      = output_path+"ufs-land_"+file_part+"_static_fields.nc"
 
 ; get grid information
 

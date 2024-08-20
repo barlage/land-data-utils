@@ -1,8 +1,8 @@
 # vector_inputs
 
-Modify `create_inputs.sh` for your case. Submit script using:
+Modify `vector_inputs.sh` for your case. Submit script using:
 
-`sbatch create_inputs.sh`
+`sbatch vector_inputs.sh`
 
 Some standard grids may already be created here:
 
@@ -12,15 +12,15 @@ Some standard grids may already be created here:
  
 `atm_res`      : fv3 grid resolution [C48,C96,C192,C384,C768,C1152] 
 
-`ocn_res`      : ocean resolution [mx500,mx100,mx050,mx025] 
+`ocn_res`      : ocean resolution [mx500,mx100,mx050,mx025,mx000 (for no-ocean/regional)] 
 
-`grid_version` : fix file options [hr3] (only "hr3" = 20231027 fix files for now) 
+`grid_version` : fix file options [hr3] ("hr3" = 20231027 fix files; others imply special grid) 
 
 `fixfile_path` : top level path for fix files, e.g., "/scratch1/NCEPDEV/global/glopara/fix/orog/" 
 
-`grid_extent`  : grid options [global,conus] (for now, only a hard-coded conus (25-53N,235-293E) option is available) 
+`grid_extent`  : grid options [global,conus,regional] ("conus" = hard-coded (25-53N,235-293E), "regional" is a tile7 grid) 
 
-Outputs in current directory `atm_res`.`ocn_res` (`C96.mx100` example):
+Outputs in current directory `atm_res`.`ocn_res`.`grid_extent` (e.g., `C96.mx100`; `grid_extent` only added for non-global):
 
 `ufs-land_C96.mx100_hr3_corners.nc` : 
 * contains lat/lon of grid centers and corners organized in vector

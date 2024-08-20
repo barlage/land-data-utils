@@ -22,7 +22,7 @@
 # -- C768 : ~6 minutes
 # -- C1152: ~15 minutes
 #
-#SBATCH --time=0:01:00
+#SBATCH --time=0:15:00
 
 module purge
 module load ncl/6.6.2
@@ -31,9 +31,9 @@ module load ncl/6.6.2
 #
 # atm_res      : fv3 grid resolution
 # ocn_res      : ocean resolution
-# grid_version : hr3 - append directory date string (not supporting other options for now)
+# grid_version : hr3 - append globpara directory date string; else assume this is a special grid
 # fixfile_path : top level path for fix files
-# grid_extent  : global or conus
+# grid_extent  : global or conus or regional
 
 atm_res="C96"
 ocn_res="mx100"
@@ -50,17 +50,25 @@ grid_extent="global"
 if [ $grid_version = "hr3" ]; then 
   fixfile_path=$fixfile_path"20231027/"
 else
-  echo "ERROR: unknown fixfile_path $fixfile_path"
-  exit 1
+  echo "NOTE: using non-standard fixfile_path $fixfile_path"
 fi
 
 # the default location for output files is $atm_res.$ocn_res
 
-if [ $grid_extent = "global" ]; then 
-  output_path=$atm_res.$ocn_res"/"
+output_path=$atm_res
+if [ $grid_version = "hr3" ]; then 
+  output_path=$output_path.$ocn_res
 else
-  output_path=$atm_res.$ocn_res.$grid_extent"/"
+  output_path=$output_path.$grid_version
 fi
+if [ $grid_extent = "conus" ]; then 
+  output_path=$output_path.$grid_extent
+fi
+if [ $grid_extent = "regional" ]; then 
+  output_path=$output_path.$grid_extent
+fi
+
+output_path=$output_path"/"
 
 if [ -d $output_path ]; then 
   echo "ERROR: directory $output_path exists and overwriting is prevented"
@@ -72,26 +80,23 @@ fi
 
 # create the strings for the ncl command line
 
-cmdparm="'atm_res="\"$atm_res"\"' "
-cmdparm=$cmdparm"'ocn_res="\"$ocn_res"\"' "
-cmdparm=$cmdparm"'grid_version="\"$grid_version"\"' "
-cmdparm=$cmdparm"'output_path="\"$output_path"\"' "
-cmdparm=$cmdparm"'fixfile_path="\"$fixfile_path"\"' "
-cmdparm=$cmdparm"'grid_extent="\"$grid_extent"\"' "
-
-echo "variable list sent to NCL"
-echo $cmdparm
+echo "atm_res = $atm_res" > regrid_parameter_assignment
+echo "ocn_res = $ocn_res" >> regrid_parameter_assignment
+echo "grid_version = $grid_version" >> regrid_parameter_assignment
+echo "output_path = $output_path" >> regrid_parameter_assignment
+echo "fixfile_path = $fixfile_path" >> regrid_parameter_assignment
+echo "grid_extent = $grid_extent" >> regrid_parameter_assignment
 
 # create the grid corners file, this is used in follow-on ncl scripts and for other tools
 
-eval "time ncl extract_corners.ncl $cmdparm"
+eval "time ncl extract_corners.ncl"
 
 # create the static fields file, this is used to create the inputs to the driver
 
-eval "time ncl extract_static.ncl $cmdparm"
+eval "time ncl extract_static.ncl"
 
 # create the SCRIP file, this is used for ESMF regridding
 
-eval "time ncl create_scrip.ncl $cmdparm"
+eval "time ncl create_scrip.ncl"
 
-
+rm -f regrid_parameter_assignment
