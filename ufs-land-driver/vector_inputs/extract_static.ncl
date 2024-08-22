@@ -7,6 +7,7 @@ begin
  output_path  = keyword_values("regrid_parameter_assignment","output_path" ,"string")
  fixfile_path = keyword_values("regrid_parameter_assignment","fixfile_path","string")
  grid_extent  = keyword_values("regrid_parameter_assignment","grid_extent" ,"string")
+ mask_flag    = keyword_values("regrid_parameter_assignment","land_mask"   ,"string")
 
 ; create filename and overwrite if present
 
@@ -179,8 +180,16 @@ print("Starting tile: "+itile)
    soilfile = addfile(fixfile_path+atm_res+"/sfc/"+atm_res+"."+ocn_res+".soil_type.tile"+itile+".nc","r")
    colrfile = addfile(fixfile_path+atm_res+"/sfc/"+atm_res+"."+ocn_res+".soil_color.tile"+itile+".nc","r")
  end if
+ 
+ if(mask_flag.eq."land_frac") then
+   inmask = maskfile->land_frac
+ elseif(mask_flag.eq."slmsk")
+   inmask = maskfile->slmsk
+ else
+   print("Unknown land_mask: "+mask_flag)
+   exit
+ end if
 
- inmask = maskfile->land_frac 
  inlat  = maskfile->geolat
  inlon  = maskfile->geolon
 

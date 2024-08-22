@@ -20,6 +20,8 @@ Some standard grids may already be created here:
 
 `grid_extent`  : grid options [global,conus,regional] ("conus" = hard-coded (25-53N,235-293E), "regional" is a tile7 grid) 
 
+`land_mask`    : used to determine land grids [land_frac,slmsk]
+
 Outputs in current directory `atm_res`.`ocn_res`.`grid_extent` (e.g., `C96.mx100`; `grid_extent` only added for non-global):
 
 `ufs-land_C96.mx100_hr3_corners.nc` : 

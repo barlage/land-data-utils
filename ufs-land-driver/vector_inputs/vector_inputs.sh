@@ -34,12 +34,14 @@ module load ncl/6.6.2
 # grid_version : hr3 - append globpara directory date string; else assume this is a special grid
 # fixfile_path : top level path for fix files
 # grid_extent  : global or conus or regional
+# land_mask    : how to determine land grids
 
 atm_res="C96"
 ocn_res="mx100"
 grid_version="hr3"
 fixfile_path="/scratch1/NCEPDEV/global/glopara/fix/orog/"
 grid_extent="global"
+land_mask="land_frac"
 
 #################################################################################
 #  shouldn't need to modify anything below
@@ -86,6 +88,7 @@ echo "grid_version = $grid_version" >> regrid_parameter_assignment
 echo "output_path = $output_path" >> regrid_parameter_assignment
 echo "fixfile_path = $fixfile_path" >> regrid_parameter_assignment
 echo "grid_extent = $grid_extent" >> regrid_parameter_assignment
+echo "land_mask = $land_mask" >> regrid_parameter_assignment
 
 # create the grid corners file, this is used in follow-on ncl scripts and for other tools
 
