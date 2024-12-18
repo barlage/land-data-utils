@@ -94,6 +94,13 @@ if(lake_present) then
 end if
 
 end do
- print("total number of grids :   " + (384*384*6))
+
+print("total number of grids :   " + (384*384*6))
+
+print("")
+print("Comparing oro files: "+fix_path1+oro_file1+"*.nc")
+print(" with oro files: "+fix_path2+oro_file2+"*.nc")
+print("")
+
 
 end
