@@ -28,3 +28,4 @@ Repository structure:
   - `weights` : scripts for creating regrid weights files
   - `datm` : scripts for creating data atmospheric forcing in vector format
   - `cold_start` : scripts for ufs-land-driver cold start initial conditions
+- `consistency` : scripts to check land-based consistency between fix files and sfc_data files
