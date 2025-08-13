@@ -6,7 +6,7 @@ Modify `create_weights.sh` for your case. Submit script using:
 
 Some standard grids may already be created here:
 
-`/scratch2/NCEPDEV/land/data/ufs-land-driver/weights`
+`/scratch4/NCEPDEV/land/data/ufs-land-driver/weights`
 
  set parameters for weights generation
  
@@ -18,11 +18,11 @@ Some standard grids may already be created here:
 
 `datm_source`  : data atmosphere source [ERA5,GDAS,CDAS]
 
-`datm_source_file` : a single datm_source file, e.g., "/scratch2/NCEPDEV/land/data/ufs-land-driver/datm/ERA5/orig/ERA5_forcing_2022-12-31.nc" 
+`datm_source_file` : a single datm_source file, e.g., `/scratch4/NCEPDEV/land/data/ufs-land-driver/datm/ERA5/original/2022/ERA5_forcing_2022-12-31.nc`
 
 `interpolation_method` : ESMF regrid method [bilinear,neareststod,nearestdtos,conserve]
 
-`destination_scrip_path` : destination SCRIP path, e.g., "/scratch2/NCEPDEV/land/data/ufs-land-driver/vector_inputs/" 
+`destination_scrip_path` : destination SCRIP path, e.g., `/scratch4/NCEPDEV/land/data/ufs-land-driver/vector_inputs/`
 
 `grid_extent`  : grid options [global,conus] (for now, only a hard-coded conus (25-53N,235-293E) option is available) 
 
