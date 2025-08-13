@@ -6,7 +6,7 @@ Modify `create_inputs.sh` for your case. Submit script using:
 
 Some standard grids may already be created here:
 
-`/scratch2/NCEPDEV/land/data/ufs-land-driver/vector_inputs`
+`/scratch4/NCEPDEV/land/data/ufs-land-driver/vector_inputs`
 
  set parameters for grid generation
  
@@ -16,7 +16,7 @@ Some standard grids may already be created here:
 
 `grid_version` : fix file options [hr3] (only "hr3" = 20231027 fix files for now) 
 
-`fixfile_path` : top level path for fix files, e.g., "/scratch1/NCEPDEV/global/glopara/fix/orog/" 
+`fixfile_path` : top level path for fix files, e.g., `/scratch3/NCEPDEV/global/role.glopara/fix/orog/` 
 
 `grid_extent`  : grid options [global,conus] (for now, only a hard-coded conus (25-53N,235-293E) option is available) 
 
