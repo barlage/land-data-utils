@@ -38,7 +38,7 @@ module load ncl/6.6.2
 atm_res="C96"
 ocn_res="mx100"
 grid_version="hr3"
-fixfile_path="/scratch1/NCEPDEV/global/glopara/fix/orog/"
+fixfile_path="/scratch3/NCEPDEV/global/role.glopara/fix/orog/"
 grid_extent="global"
 
 #################################################################################

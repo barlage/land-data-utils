@@ -19,19 +19,19 @@
 #SBATCH --chdir=.
 
 module purge
-module use /scratch1/NCEPDEV/nems/role.epic/spack-stack/spack-stack-1.5.1/envs/unified-env-rocky8/install/modulefiles/Core
-module load stack-intel/2021.5.0
-module load stack-intel-oneapi-mpi/2021.5.1
-module load esmf/8.5.0
+module use /contrib/spack-stack/spack-stack-1.9.2/envs/ue-oneapi-2024.2.1/install/modulefiles/Core
+module load stack-oneapi/2024.2.1
+module load stack-intel-oneapi-mpi/2021.13
+module load esmf/8.8.0
 module load ncl/6.6.2
 
 atm_res="C96"
 ocn_res="mx100"
 grid_version="hr3"
 datm_source="ERA5"
-datm_source_file="/scratch2/NCEPDEV/land/data/forcing/era5/datm/orig/ERA5_forcing_2022-12-31.nc"
+datm_source_file="/scratch4/NCEPDEV/land/data/ufs-land-driver/datm/ERA5/original/1980/ERA5_forcing_1980-01-01.nc"
 interpolation_method="bilinear"
-destination_scrip_path="/scratch2/NCEPDEV/land/data/ufs-land-driver/vector_inputs/"
+destination_scrip_path="/scratch4/NCEPDEV/land/data/ufs-land-driver/vector_inputs/"
 grid_extent="global"
 
 #################################################################################
