@@ -13,7 +13,7 @@ Modify `create_cold_start.sh` for your case. Submit script using:
 
 Some standard grids and times may already be created here:
 
-`/scratch2/NCEPDEV/land/data/ufs-land-driver/cold_start`
+`/scratch4/NCEPDEV/land/data/ufs-land-driver/cold_start`
 
  set parameters for weights generation
  
@@ -27,9 +27,9 @@ Some standard grids and times may already be created here:
 
 `datm_source`  : data atmosphere source [ERA5,GDAS,CDAS]
 
-`datm_source_path` : base path where datm already exists, e.g., "/scratch2/NCEPDEV/land/data/ufs-land-driver/datm/ERA5/" 
+`datm_source_path` : base path where datm already exists, e.g., `/scratch4/NCEPDEV/land/data/ufs-land-driver/datm/ERA5/` 
 
-`static_file_path` : ufs-land-driver static file path (created in Step 1), e.g., `"/scratch2/NCEPDEV/land/data/ufs-land-driver/vector_inputs/"` 
+`static_file_path` : ufs-land-driver static file path (created in Step 1), e.g., `/scratch4/NCEPDEV/land/data/ufs-land-driver/vector_inputs/` 
 
 `interpolation_method` : ESMF regrid method [bilinear,neareststod,nearestdtos,conserve]
 

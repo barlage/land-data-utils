@@ -13,16 +13,16 @@
 #SBATCH --chdir=.
 #
 # -- Request tasks, this should correspond to the number of lines in your regrid-tasks file
-#SBATCH --ntasks=40
+#SBATCH --ntasks=90
 #
 # -- Specify a maximum wallclock
-# -- C96  : ~25 minutes  C96 conus : ~25 minutes
+# -- C96  : ~30 minutes  C96 conus : ~25 minutes
 # -- C192 : ~30 minutes
 # -- C384 : ~1 hours
 # -- C768 : ~1.5 hours
 # -- C1152: ~3 hours
 #
-#SBATCH --time=0:25:00
+#SBATCH --time=0:30:00
 
 module purge
 module load ncl/6.6.2
@@ -32,12 +32,12 @@ ocn_res="mx100"
 grid_version="hr3"
 grid_extent="global"
 datm_source="ERA5"
-datm_source_path="/scratch2/NCEPDEV/land/data/ufs-land-driver/datm/ERA5/orig/"
-elevation_source_filename="/scratch2/NCEPDEV/land/data/ufs-land-driver/datm/ERA5/elevation/e5.oper.invariant.128_129_z.ll025sc.1979010100_1979010100.nc"
-static_file_path="/scratch2/NCEPDEV/land/data/ufs-land-driver/vector_inputs/"
-weights_path="/scratch2/NCEPDEV/land/data/ufs-land-driver/weights/"
+datm_source_path="/scratch4/NCEPDEV/land/data/ufs-land-driver/datm/ERA5/original/"
+elevation_source_filename="/scratch4/NCEPDEV/land/data/ufs-land-driver/datm/ERA5/original/elevation/e5.oper.invariant.128_129_z.ll025sc.1979010100_1979010100.nc"
+static_file_path="/scratch4/NCEPDEV/land/data/ufs-land-driver/vector_inputs/"
+weights_path="/scratch4/NCEPDEV/land/data/ufs-land-driver/weights/"
 interpolation_method="bilinear"
-regrid_tasks_file="regrid-tasks.1990-2009.ERA5"
+regrid_tasks_file="regrid-tasks.ERA5"
 
 #################################################################################
 #  shouldn't need to modify anything below

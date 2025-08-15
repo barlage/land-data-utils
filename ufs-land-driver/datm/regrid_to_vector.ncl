@@ -54,7 +54,7 @@ do idd = 1, numdays
 
   datestring = ""+iyyyy+"-"+tostring_with_format(imm,"%2.2d")+"-"+tostring_with_format(idd,"%2.2d")
 
-  infile = addfile(datm_source_path+"ERA5_forcing_"+datestring+".nc","r")
+  infile = addfile(datm_source_path+iyyyy+"/ERA5_forcing_"+datestring+".nc","r")
   print("Starting: "+datestring)
 
   solar_radiation = new((/24,numlocs/), float)

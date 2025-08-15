@@ -23,3 +23,9 @@ Repository structure:
 - `DA` : scripts for DA
   - `data` : scripts for creating and manipulating DA data
 	  - `MADIS` : scripts to process MADIS obs
+- `ufs-land-driver` : scripts to create inputs to ufs-land-driver
+  - `vector_inputs` : scripts for creating one-time inputs for ufs-land-driver
+  - `weights` : scripts for creating regrid weights files
+  - `datm` : scripts for creating data atmospheric forcing in vector format
+  - `cold_start` : scripts for ufs-land-driver cold start initial conditions
+- `consistency` : scripts to check land-based consistency between fix files and sfc_data files
