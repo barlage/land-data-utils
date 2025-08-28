@@ -1,7 +1,7 @@
 #!/bin/sh -l
 #
 # -- Specify queue
-#SBATCH -q debug
+#SBATCH -q batch
 #
 # -- Specify under which account a job should run
 #SBATCH --account=fv3-cpu
@@ -20,7 +20,7 @@
 # -- C192 : ~30 minutes
 # -- C384 : ~1 hours
 # -- C768 : ~1.5 hours
-# -- C1152: ~3 hours
+# -- C1152: ~3 hours; need to run "sbatch --mem=32g "
 #
 #SBATCH --time=0:30:00
 
@@ -109,7 +109,7 @@ cmdparm=$cmdparm"'elevation_filename="\"$elevation_filename"\"' "
 echo "variable list sent to elevation creating NCL script"
 echo $cmdparm
 
-eval "time ncl create_vector_elevation.ncl $cmdparm"
+eval "/usr/bin/time ncl create_vector_elevation.ncl $cmdparm"
 
 # regrid the source data atmosphere
 
