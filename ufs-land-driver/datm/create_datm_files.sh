@@ -13,7 +13,7 @@
 #SBATCH --chdir=.
 #
 # -- Request tasks, this should correspond to the number of lines in your regrid-tasks file
-#SBATCH --ntasks=90
+#SBATCH --ntasks=92
 #
 # -- Specify a maximum wallclock
 # -- C96  : ~30 minutes  C96 conus : ~25 minutes
