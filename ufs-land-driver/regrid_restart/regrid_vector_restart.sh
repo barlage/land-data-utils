@@ -136,4 +136,4 @@ echo "source_static = $source_static" >> regrid_parameter_assignment
 
 eval "time ncl regrid_vector_restart.ncl "
 
-#rm -f regrid_parameter_assignment
+rm -f regrid_parameter_assignment

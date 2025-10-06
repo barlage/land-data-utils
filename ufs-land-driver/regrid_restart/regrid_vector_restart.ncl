@@ -73,6 +73,12 @@ porosity = (/-999.,0.339,0.421,0.434,0.476,0.484,0.439,0.404,0.464, \ ; add fake
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; read in all the weights files info for the different mappings
+;  source_lookup: source grid that maps to the destination grid, 1-based
+;  destination_lookup: for nearest neighbor, 1-based
+;     this will just be a grid count or a list of grids that fit criteria
+;  weights: for nearest neighbor, this will = 1.0
+;  the length of each vector will be the number of corresponding destination grids, 
+;     e.g., weights=total destination grids, weights_snow=total number of glacier grids
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 weights_file = addfile(weights_filename,"r")
@@ -95,13 +101,14 @@ source_lookup_snow      = weights_file->col
 destination_lookup_snow = weights_file->row
 weights_snow            = weights_file->S
 
-weights_file = addfile(weights_veg_bare_filename,"r")
+weights_file = addfile(weights_veg_bare_filename,"r")  ; these are the vegetation grids that are mapped to bare
 source_lookup_veg_bare      = weights_file->col
 destination_lookup_veg_bare = weights_file->row
 weights_veg_bare            = weights_file->S
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; create some source information on the destination grid
+;  source_to_destination_map: 0-based source to 0-based destination mapping
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 source_to_destination_map = new(dimsizes(destination_lookup),integer)
@@ -123,6 +130,7 @@ print("missing source_to_destination_map: "+num(ismissing(source_to_destination_
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; for the three mappings populate the source information
 ;  there should be no empty grids
+;  
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ; veg-to-veg grids
@@ -329,7 +337,7 @@ porosity_equal_count = 0
 do iloc = 0, dimsizes(destination_lookup)-1
 
   if(destination_vegtype(iloc) .eq. 15) then ; permanent snow
-    porosity_adjustment(iloc) = -1.0
+    porosity_adjustment(iloc) = -1.0  ; nothing will be done for adjustment<0 later
   else
     if(destination_soiltype(iloc).ne.source_soil_type_on_destination(iloc)) then ; soil mismatch
       porosity_adjustment(iloc) = porosity(destination_soiltype(iloc)) \
@@ -339,7 +347,7 @@ do iloc = 0, dimsizes(destination_lookup)-1
         porosity_equal_count = porosity_equal_count + 1  ;grids with different soil type but same porosity
       end if
     else
-      porosity_adjustment(iloc) = -1.0
+      porosity_adjustment(iloc) = -1.0  ; nothing will be done for adjustment<0 later
     end if
   end if
 
@@ -380,34 +388,12 @@ do ivar = 2, 69 ;30,30;34,34 ; 2, 69
   dimlen   = dimsizes(invar)
 
   outvar          = ESMF_regrid_with_weights(invar,weights_filename,Opt)
-  outvar_veg      = ESMF_regrid_with_weights(invar,weights_veg_filename,Opt)
-  outvar_bare     = ESMF_regrid_with_weights(invar,weights_bare_filename,Opt)
-  outvar_snow     = ESMF_regrid_with_weights(invar,weights_snow_filename,Opt)
-  outvar_veg_bare = ESMF_regrid_with_weights(invar,weights_veg_bare_filename,Opt)
 
   if(dimsizes(dimlen).gt.2) then  ; 3D soil or snow or albedo variable
 
     do ilev = 0, dimlen(1)-1
 
-      print(num(outvar(0,ilev,:) .gt. 1e19))
-      print(num(outvar(0,ilev,:) .gt. 1e19 .and. (destination_vegtype.ne.15.and.destination_vegtype.ne.16)))
-      print(num(outvar(0,ilev,:) .gt. 1e19 .and. (destination_vegtype.eq.15)))
-      print(num(outvar(0,ilev,:) .gt. 1e19 .and. (destination_vegtype.eq.16)))
-
-      outvar(0,ilev,:) = where(destination_vegtype.ne.15 .and. destination_vegtype.ne.16, outvar_veg(0,ilev,:), outvar(0,ilev,:))
-      outvar(0,ilev,:) = where(destination_vegtype.eq.15, outvar_snow(0,ilev,:), outvar(0,ilev,:))
-
-      if(any(special_variables.eq.ivar)) then  ; keep missing values over bare_problem_grids for special_variables
-        outvar(0,ilev,:) = where(destination_vegtype.eq.16, outvar_bare(0,ilev,:), outvar(0,ilev,:))
-      else
-        outvar(0,ilev,:) = where(destination_vegtype.eq.16 .and. .not.bare_problem_grids, outvar_bare(0,ilev,:)    , outvar(0,ilev,:))
-        outvar(0,ilev,:) = where(destination_vegtype.eq.16 .and.      bare_problem_grids, outvar_veg_bare(0,ilev,:), outvar(0,ilev,:))
-      end if
-
-      print(num(outvar(0,ilev,:).gt.1e19))
-      print(num(outvar(0,ilev,:) .gt. 1e19 .and. (destination_vegtype.ne.15.and.destination_vegtype.ne.16)))
-      print(num(outvar(0,ilev,:) .gt. 1e19 .and. (destination_vegtype.eq.15)))
-      print(num(outvar(0,ilev,:) .gt. 1e19 .and. (destination_vegtype.eq.16)))
+      outvar(0,ilev,:) = invar(0,ilev,source_to_destination_map)
 
       if(invars(ivar).eq."soil_moisture_vol") then
         outvar(0,ilev,:) = where(porosity_adjustment.gt.0, outvar(0,ilev,:) * porosity_adjustment, outvar(0,ilev,:))
@@ -425,32 +411,13 @@ do ivar = 2, 69 ;30,30;34,34 ; 2, 69
       if(invars(ivar).eq."temperature_snow") then
         outvar(0,ilev,:) = where(outvar(0,ilev,:).gt.0, outvar(0,ilev,:) - 0.0065*elevation_difference_d2s, outvar(0,ilev,:))
         outvar(0,ilev,:) = where(outvar(0,ilev,:).gt.273.15, 273.15, outvar(0,ilev,:))
-
       end if 
 
     end do
 
   else
 
-    print(num(outvar(0,:) .gt. 1e19))
-    print(num(outvar(0,:) .gt. 1e19 .and. (destination_vegtype.ne.15.and.destination_vegtype.ne.16)))
-    print(num(outvar(0,:) .gt. 1e19 .and. (destination_vegtype.eq.15)))
-    print(num(outvar(0,:) .gt. 1e19 .and. (destination_vegtype.eq.16)))
-
-    outvar(0,:) = where(destination_vegtype.ne.15 .and. destination_vegtype.ne.16, outvar_veg(0,:), outvar(0,:))
-    outvar(0,:) = where(destination_vegtype.eq.15, outvar_snow(0,:), outvar(0,:))
-
-    if(any(special_variables.eq.ivar)) then  ; keep missing values over bare_problem_grids for special_variables
-      outvar(0,:) = where(destination_vegtype.eq.16, outvar_bare(0,:), outvar(0,:))
-    else
-      outvar(0,:) = where(destination_vegtype.eq.16 .and. .not.bare_problem_grids, outvar_bare(0,:)    , outvar(0,:))
-      outvar(0,:) = where(destination_vegtype.eq.16 .and.      bare_problem_grids, outvar_veg_bare(0,:), outvar(0,:))
-    end if
-
-    print(num(outvar(0,:) .gt. 1e19))
-    print(num(outvar(0,:) .gt. 1e19 .and. (destination_vegtype.ne.15.and.destination_vegtype.ne.16)))
-    print(num(outvar(0,:) .gt. 1e19 .and. (destination_vegtype.eq.15)))
-    print(num(outvar(0,:) .gt. 1e19 .and. (destination_vegtype.eq.16)))
+    outvar(0,:) = invar(0,source_to_destination_map)
 
   end if
 
@@ -465,10 +432,6 @@ do ivar = 2, 69 ;30,30;34,34 ; 2, 69
 
   delete(invar)
   delete(outvar)
-  delete(outvar_veg)
-  delete(outvar_bare)
-  delete(outvar_snow)
-  delete(outvar_veg_bare)
   delete(dimnames)
   delete(dimlen)
 
