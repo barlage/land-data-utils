@@ -1,13 +1,14 @@
 
 begin
 
-create_output_file = False   ; if True, will clobber existing file
-create_C96_vector = True
+create_output_file = True   ; if True, will clobber existing file
+create_C96_vector = False
 create_C96_conus_vector = False
 create_HR1_grid = False
 create_P8_grid = False
+create_RETRO_grid = True
 
-outname = "/scratch2/NCEPDEV/land/data/evaluation/METAR_SYNOP/metar_allgrids_lookup.nc"
+outname = "/scratch4/NCEPDEV/land/data/evaluation/ADPsfc_BUFR/METAR_SYNOP_retro_lookup.nc"
 if(create_output_file) then
    system("if [ -e "+outname+" ]; then rm -f "+outname+ ";fi")
   outfile = addfile(outname,"c")
@@ -15,16 +16,16 @@ else
   outfile = addfile(outname,"w")
 end if
 
-infile = addfile("/scratch2/NCEPDEV/land/data/evaluation/METAR_SYNOP/map_metar_master_reorder.nc", "r")
+infile = addfile("/scratch4/NCEPDEV/land/data/evaluation/ADPsfc_BUFR/METAR_SYNOP_unique_stations.nc", "r")
 
-inlat = infile->metar_lat
-inlon = infile->metar_lon
+inlat = infile->latitude
+inlon = infile->longitude
 
 ; C96 vector
 
 if(create_C96_vector) then
 
-  infile = addfile("/scratch2/NCEPDEV/land/Michael.Barlage/forcing/C96/vector/ufs-land_C96_static_fields_hr2.nc","r")
+  infile = addfile("/scratch4/NCEPDEV/land/data/ufs-land-driver/vector_inputs/C96.mx100/ufs-land_C96.mx100_hr3_static_fields.nc","r")
   latitude = infile->latitude
   longitude = infile->longitude
   vegetation_type = infile->vegetation_category
@@ -102,7 +103,7 @@ end if ; create_C96_vector
 
 if(create_C96_conus_vector) then
 
-  infile = addfile("/scratch2/NCEPDEV/land/Michael.Barlage/forcing/C96/vector/ufs-land_C96_conus_static_fields_hr2.nc","r")
+  infile = addfile("/scratch4/NCEPDEV/land/data/ufs-land-driver/vector_inputs/C96.mx100.conus/ufs-land_C96.mx100.conus_hr3_static_fields.nc","r")
   latitude = infile->latitude
   longitude = infile->longitude
   vegetation_type = infile->vegetation_category
@@ -180,7 +181,7 @@ end if ; create_C96_conus_vector
 
 if(create_HR1_grid) then
 
-  infile = addfile("/scratch2/NCEPDEV/land/data/evaluation/domains/hr/hr1_vegsoil.nc","r")
+  infile = addfile("/scratch4/NCEPDEV/land/data/evaluation/domains/hr/hr1_vegsoil.nc","r")
   latitude = infile->lat
   longitude = infile->lon
   longitude_shift = where(longitude.ge.180,longitude-360,longitude)
@@ -280,7 +281,7 @@ end if ; create_HR1_grid
 
 if(create_P8_grid) then
 
-  infile = addfile("/scratch2/NCEPDEV/land/data/evaluation/domains/prototype/prototype8_vegsoil.nc","r")
+  infile = addfile("/scratch4/NCEPDEV/land/data/evaluation/domains/prototype/prototype8_vegsoil.nc","r")
   latitude = infile->lat
   longitude = infile->lon
   longitude_shift = where(longitude.ge.180,longitude-360,longitude)
@@ -367,6 +368,106 @@ if(create_P8_grid) then
   delete(soil_type)
   
 end if ; create_P8_grid
+
+; RETRO grid
+
+if(create_RETRO_grid) then
+
+  infile = addfile("/scratch4/NCEPDEV/land/data/evaluation/domains/retro/retro_vegsoil.nc","r")
+  latitude = infile->lat
+  longitude = infile->lon
+  longitude_shift = where(longitude.ge.180,longitude-360,longitude)
+  vegetation_type = infile->vegetation_type
+  soil_type = infile->soil_type
+  elevation = infile->elevation
+
+  RETRO_lookup_i = new(dimsizes(inlat),integer)
+   RETRO_lookup_i!0 = "location"
+   RETRO_lookup_i@description = "i location (0-based) in RETRO output grid closest to observation"
+  RETRO_lookup_j = RETRO_lookup_i
+   RETRO_lookup_j@description = "j location (0-based) in RETRO output grid closest to observation"
+  RETRO_vegetation_type = RETRO_lookup_i
+   RETRO_vegetation_type@description = "vegetation type at RETRO output grid location"
+  RETRO_soil_type = RETRO_lookup_i
+   RETRO_soil_type@description = "soil type at RETRO output grid location"
+
+  RETRO_latitude = new(dimsizes(inlat),float)
+   RETRO_latitude!0 = "location"
+   RETRO_latitude@description = "latitude at RETRO output grid location"
+   RETRO_latitude@units = "degrees_north"
+  RETRO_longitude = RETRO_latitude
+   RETRO_longitude@description = "longitude at RETRO output grid location"
+   RETRO_longitude@units = "degrees_east"
+  RETRO_distance = RETRO_latitude
+   RETRO_distance@description = "distance from model grid center"
+   RETRO_distance@units = "km"
+  RETRO_elevation = RETRO_latitude
+   RETRO_elevation@description = "elevation at RETRO output grid location"
+   RETRO_elevation@units = "m"
+
+  
+  nearest_lat_j = ind_nearest_coord(inlat,latitude,0)
+  nearest_lon_i = ind_nearest_coord(inlon,longitude_shift,0)
+
+  nearest_lat_j_min = nearest_lat_j - 1
+  nearest_lon_i_min = nearest_lon_i - 1
+  nearest_lat_j_max = nearest_lat_j + 1
+  nearest_lon_i_max = nearest_lon_i + 1
+  
+  nearest_lat_j_min = where(nearest_lat_j_min.ge.0,nearest_lat_j_min,0)
+  nearest_lon_i_min = where(nearest_lon_i_min.ge.0,nearest_lon_i_min,0)
+  nearest_lat_j_max = where(nearest_lat_j_max.lt.dimsizes(latitude),nearest_lat_j_max,dimsizes(latitude)-1)
+  nearest_lon_i_max = where(nearest_lon_i_max.lt.dimsizes(longitude),nearest_lon_i_max,dimsizes(longitude)-1)
+  
+  do iloc = 0, dimsizes(inlat)-1
+
+    max_dist = 9999999.0
+
+    do icheck = nearest_lon_i_min(iloc), nearest_lon_i_max(iloc)
+    do jcheck = nearest_lat_j_min(iloc), nearest_lat_j_max(iloc)
+  
+      this_dist = gc_latlon(inlat(iloc),inlon(iloc),latitude(jcheck),longitude(icheck),20,4)
+    
+      if(this_dist .lt. max_dist) then
+        max_dist = this_dist
+        RETRO_lookup_i (iloc) = icheck
+        RETRO_lookup_j (iloc) = jcheck
+        RETRO_latitude (iloc) = (/ latitude(jcheck) /)
+        RETRO_longitude(iloc) = (/ longitude(icheck) /)
+        RETRO_distance (iloc) = max_dist
+        RETRO_vegetation_type(iloc) = (/ vegetation_type(jcheck,icheck) /)
+        RETRO_soil_type      (iloc) = (/ soil_type(jcheck,icheck) /)
+        RETRO_elevation      (iloc) = (/ elevation(jcheck,icheck) /)
+;        print("iloc: "+iloc+" icheck: "+icheck+" jcheck: "+jcheck+" max_dist: "+max_dist)
+      end if
+
+    end do
+    end do
+    
+    print("iloc: "+iloc+" icheck: "+RETRO_lookup_i(iloc)+" jcheck: "+RETRO_lookup_j(iloc)+" max_dist: "+max_dist)
+
+  end do
+
+  delete(RETRO_distance@gclat)
+  delete(RETRO_distance@gclon)
+
+  outfile->RETRO_lookup_i        = RETRO_lookup_i
+  outfile->RETRO_lookup_j        = RETRO_lookup_j
+  outfile->RETRO_latitude        = RETRO_latitude
+  outfile->RETRO_longitude       = RETRO_longitude
+  outfile->RETRO_distance        = RETRO_distance
+  outfile->RETRO_vegetation_type = RETRO_vegetation_type
+  outfile->RETRO_soil_type       = RETRO_soil_type
+  outfile->RETRO_elevation       = RETRO_elevation
+  
+  delete(latitude)
+  delete(longitude)
+  delete(longitude_shift)
+  delete(vegetation_type)
+  delete(soil_type)
+  delete(elevation)
+  
+end if ; create_RETRO_grid
 
 end
 
