@@ -1,6 +1,13 @@
 
-Includes scripts to create SCRIP files necessary for ESMF regridding. 
+General NCL script to 
 
-Defaults scripts use source data in e.g., /scratch2/NCEPDEV/land/data/fix/C768.mx025_frac
+1. create SCRIP files necessary for ESMF regridding, both with and without land mask
 
-and produce SCRIP files located e.g., /scratch2/NCEPDEV/land/data/evaluation/domains/C768
+2. create a grid information file with
+  - latitude
+  - longitude
+  - vegetation type
+  - soil type
+  - elevation 
+
+hr/ and prototype/ are legacy and kept for historical reference
