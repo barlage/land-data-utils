@@ -6,7 +6,8 @@ create_C96_vector = False
 create_C96_conus_vector = False
 create_HR1_grid = False
 create_P8_grid = False
-create_RETRO_grid = True
+create_RETRO_grid = False
+create_RAP_grid = False
 
 outname = "/scratch4/NCEPDEV/land/data/evaluation/ADPsfc_BUFR/METAR_SYNOP_retro_lookup.nc"
 if(create_output_file) then
@@ -373,9 +374,9 @@ end if ; create_P8_grid
 
 if(create_RETRO_grid) then
 
-  infile = addfile("/scratch4/NCEPDEV/land/data/evaluation/domains/retro/retro_vegsoil.nc","r")
-  latitude = infile->lat
-  longitude = infile->lon
+  infile = addfile("/scratch4/NCEPDEV/land/data/evaluation/domains/retro/retro_grid_information.nc","r")
+  latitude = infile->latitude
+  longitude = infile->longitude
   longitude_shift = where(longitude.ge.180,longitude-360,longitude)
   vegetation_type = infile->vegetation_type
   soil_type = infile->soil_type
@@ -468,6 +469,109 @@ if(create_RETRO_grid) then
   delete(elevation)
   
 end if ; create_RETRO_grid
+
+; RAP grid
+
+if(create_RAP_grid) then
+
+  infile = addfile("/scratch4/NCEPDEV/land/data/evaluation/domains/rap/rap_grid_information.nc","r")
+  latitude = infile->latitude
+  longitude = infile->longitude
+  longitude_shift = where(longitude.ge.180,longitude-360,longitude)
+  vegetation_type = infile->vegetation_type
+  soil_type = infile->soil_type
+  elevation = infile->elevation
+
+  RAP_lookup_i = new(dimsizes(inlat),integer)
+   RAP_lookup_i!0 = "location"
+   RAP_lookup_i@description = "i location (0-based) in RAP output grid closest to observation"
+   RAP_lookup_i@_FillValue = -999
+  RAP_lookup_j = RAP_lookup_i
+   RAP_lookup_j@description = "j location (0-based) in RAP output grid closest to observation"
+  RAP_vegetation_type = RAP_lookup_i
+   RAP_vegetation_type@description = "vegetation type at RAP output grid location"
+  RAP_soil_type = RAP_lookup_i
+   RAP_soil_type@description = "soil type at RAP output grid location"
+
+  RAP_latitude = new(dimsizes(inlat),float)
+   RAP_latitude!0 = "location"
+   RAP_latitude@description = "latitude at RAP output grid location"
+   RAP_latitude@units = "degrees_north"
+   RAP_latitude@_FillValue = -999.
+  RAP_longitude = RAP_latitude
+   RAP_longitude@description = "longitude at RAP output grid location"
+   RAP_longitude@units = "degrees_east"
+  RAP_distance = RAP_latitude
+   RAP_distance@description = "distance from model grid center"
+   RAP_distance@units = "km"
+   RAP_distance@_FillValue = 99999.
+  RAP_elevation = RAP_latitude
+   RAP_elevation@description = "elevation at RAP output grid location"
+   RAP_elevation@units = "m"
+
+; since the RAP grid is lambert, do an inefficient sweep of all grids
+  
+  rap_grid_size = dimsizes(latitude)
+
+  max_rap_latitude = max(latitude)+0.05
+  min_rap_latitude = min(latitude)-0.05
+  max_rap_longitude = max(longitude)+0.05
+  min_rap_longitude = min(longitude)-0.05
+
+  do iloc = 0, dimsizes(inlat)-1
+
+   if(inlat(iloc).gt.min_rap_latitude  .and. inlat(iloc).lt.max_rap_latitude .and. \
+      inlon(iloc).gt.min_rap_longitude .and. inlon(iloc).lt.max_rap_longitude) then
+
+    max_dist = 99999.0
+
+    do jcheck = 0, rap_grid_size(0) - 1
+    do icheck = 0, rap_grid_size(1) - 1
+  
+      this_dist = gc_latlon(inlat(iloc),inlon(iloc),latitude(jcheck,icheck),longitude(jcheck,icheck),20,4)
+    
+      if(this_dist .lt. max_dist .and. this_dist .lt. 15.0) then
+        max_dist = this_dist
+        RAP_lookup_i (iloc) = icheck
+        RAP_lookup_j (iloc) = jcheck
+        RAP_latitude (iloc) = (/ latitude(jcheck,icheck) /)
+        RAP_longitude(iloc) = (/ longitude(jcheck,icheck) /)
+        RAP_distance (iloc) = max_dist
+        RAP_vegetation_type(iloc) = (/ vegetation_type(jcheck,icheck) /)
+        RAP_soil_type      (iloc) = (/ soil_type(jcheck,icheck) /)
+        RAP_elevation      (iloc) = (/ elevation(jcheck,icheck) /)
+;        print("iloc: "+iloc+" icheck: "+icheck+" jcheck: "+jcheck+" max_dist: "+max_dist)
+      end if
+
+    end do
+    end do
+    
+    print("iloc: "+iloc+" icheck: "+RAP_lookup_i(iloc)+" jcheck: "+RAP_lookup_j(iloc)+" max_dist: "+max_dist)
+
+   end if
+
+  end do
+
+  delete(RAP_distance@gclat)
+  delete(RAP_distance@gclon)
+
+  outfile->RAP_lookup_i        = RAP_lookup_i
+  outfile->RAP_lookup_j        = RAP_lookup_j
+  outfile->RAP_latitude        = RAP_latitude
+  outfile->RAP_longitude       = RAP_longitude
+  outfile->RAP_distance        = RAP_distance
+  outfile->RAP_vegetation_type = RAP_vegetation_type
+  outfile->RAP_soil_type       = RAP_soil_type
+  outfile->RAP_elevation       = RAP_elevation
+  
+  delete(latitude)
+  delete(longitude)
+  delete(longitude_shift)
+  delete(vegetation_type)
+  delete(soil_type)
+  delete(elevation)
+  
+end if ; create_RAP_grid
 
 end
 
