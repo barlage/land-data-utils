@@ -5,7 +5,7 @@ use netcdf
 implicit none
 
 character*256 :: filename_in  = '/scratch4/NCEPDEV/land/data/fix/original/land_mask/GlobalWaterFraction2020_7p5arcsec_v2.nc'
-character*256 :: filename_out = '/scratch4/NCEPDEV/land/data/fix/original/land_mask/land_fraction.nesdis.30s.nc'
+character*256 :: filename_out = '/scratch4/NCEPDEV/land/data/fix/original/land_mask/land_fraction.nesdis.30s.uncompressed.nc'
 integer  , parameter ::  jdim = 21600
 integer  , parameter ::  idim = 43200
 
@@ -87,7 +87,7 @@ error = nf90_def_var(ncid_out, "land_fraction", NF90_BYTE, (/ncdim_idim,ncdim_jd
   error = nf90_put_att(ncid_out, varid, "scale_factor", 0.01)
    call netcdf_err(error, "defining attribute: scale_factor variable: land_fraction")
 
-error = nf90_put_att(ncid_out, NF90_GLOBAL, "description", "2020 Global water surface fraction (%) product, 7.5 arcsecond, lat/lon original")
+error = nf90_put_att(ncid_out, NF90_GLOBAL, "description", "derived from 2020 Global water surface fraction (%) product, 7.5 arcsecond, lat/lon original")
  call netcdf_err(error, "defining attribute: description: global")
 error = nf90_put_att(ncid_out, NF90_GLOBAL, "data_source", "MOD44W C6 (2011-2015) Updated with 7 circa-2000 10m-30m land cover/water products")
  call netcdf_err(error, "defining attribute: data_source : global")
