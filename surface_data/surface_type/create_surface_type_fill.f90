@@ -1,17 +1,20 @@
-program create_surface_type_nofill
+program create_surface_type_fill
 
 use netcdf
 
 implicit none
 
 character*256 :: filename_in  = '/scratch4/NCEPDEV/land/data/fix/original/surface_type/vegetation_type/SNPP-N20_VIIRS_AST_EMC20types_2012-2019Climatology_30arcsec_v3.nc'
-character*256 :: filename_out = '/scratch4/NCEPDEV/land/data/fix/original/surface_type/vegetation_type/vegetation_type.viirs.v3.igbp.30s.nofill.uncompressed.nc'
+character*256 :: filename_out = '/scratch4/NCEPDEV/land/data/fix/original/surface_type/vegetation_type/vegetation_type.viirs.v3.igbp.30s.fill.uncompressed.nc'
+character*256 :: landfrac_in  = '/scratch4/NCEPDEV/land/data/fix/original/land_mask/land_fraction.nesdis.30s.uncompressed.nc'
 
 integer  , parameter ::  jdim = 21600
 integer  , parameter ::  idim = 43200
 
 integer*1, allocatable :: surface_type_out (:,:,:)
 integer*1, allocatable :: surface_type_in  (:,:)
+integer*1, allocatable :: land_fraction    (:,:,:)
+integer*1, allocatable :: surface_type_save(:,:,:)
 real*8   , allocatable :: latitude_center  (:)
 real*8   , allocatable :: longitude_center (:)
 real*8   , allocatable :: latitude_corner  (:)
@@ -20,7 +23,9 @@ real*8   , allocatable :: longitude_corner (:)
 integer :: error
 integer :: ncid_in,ncid_out,ncdim_jdim,ncdim_jdim_p1,ncdim_idim,ncdim_idim_p1,ncdim_time
 integer :: varid
-integer :: i, j
+integer :: i, j, itype
+integer :: countcur, countmax, num_missing, imax, imin, jmax, jmin
+integer :: maxtype
 integer*1, parameter ::  nodata_byte = -99
 
 allocate(latitude_center(jdim))
@@ -123,8 +128,10 @@ error = nf90_put_var(ncid_out, varid, longitude_corner)
 error = nf90_close(ncid_out) 
  call netcdf_err(error, "closing ncid_out")
 
-allocate(surface_type_in (idim,jdim  ))
-allocate(surface_type_out(idim,jdim,1))
+allocate(surface_type_in  (idim,jdim  ))
+allocate(surface_type_out (idim,jdim,1))
+allocate(surface_type_save(idim,jdim,1))
+allocate(land_fraction    (idim,jdim,1))
 
 !====================================
 ! read new data file
@@ -145,9 +152,133 @@ print*, 'in max: ', maxval(surface_type_in)
 print*, 'in min: ', minval(surface_type_in)
 
 !====================================
+! read land_fraction data file
+
+error = nf90_open(trim(landfrac_in), nf90_nowrite, ncid_in)
+  call netcdf_err(error, 'opening file: '//trim(landfrac_in) )
+  
+error = nf90_inq_varid(ncid_in, 'land_fraction', varid)
+ call netcdf_err(error, 'inquire land_fraction variable' )
+
+error = nf90_get_var(ncid_in, varid, land_fraction)
+ call netcdf_err(error, 'reading land_fraction variable' )
+
+error = nf90_close(ncid_in)
+ call netcdf_err(error, 'closing file: '//trim(landfrac_in) )
+
+!====================================
 ! swap the latitude on the output grid
 
 surface_type_out(:,:,1) = surface_type_in(:,21600:1:-1)
+
+!====================================
+! print inconsistencies
+
+print*, "Surface type  = 17, land fraction = 0:", count(surface_type_out == 17 .and. land_fraction == 0)
+print*, "Surface type /= 17, land fraction = 0:", count(surface_type_out /= 17 .and. land_fraction == 0)
+print*, "Surface type  = 17, land fraction > 0:", count(surface_type_out == 17 .and. land_fraction > 0)
+print*, "Surface type /= 17, land fraction > 0:", count(surface_type_out /= 17 .and. land_fraction > 0)
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! first check 10x10
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  surface_type_save = surface_type_out
+
+  num_missing = count(surface_type_out == 17 .and. land_fraction > 0)
+  print *, "Num missing before fill: ", num_missing
+  if(num_missing > 0) then
+    do i = 1,idim
+    do j = 1,jdim
+      if(surface_type_out(i,j,1) == 17 .and. land_fraction(i,j,1) > 0) then
+       imax = min(i+5,idim)
+       imin = max(i-5,1)
+       jmax = min(j+5,jdim)
+       jmin = max(j-5,1)
+       countmax = 0
+       maxtype = -1
+       do itype = 1,20
+         countcur = count(surface_type_save(imin:imax,jmin:jmax,1) == itype)
+	 if(countcur > countmax .and. itype /=17) maxtype = itype
+	 if(countcur > countmax .and. itype /=17) countmax = countcur
+       end do
+       if(countmax > 0) then
+         surface_type_out(i,j,1) = maxtype
+       end if
+      end if
+    end do
+    end do
+  end if
+
+!====================================
+! print updated inconsistencies
+
+print*
+print*, "After 10x10 fill"
+print*, "Surface type  = 17, land fraction = 0:", count(surface_type_out == 17 .and. land_fraction == 0)
+print*, "Surface type /= 17, land fraction = 0:", count(surface_type_out /= 17 .and. land_fraction == 0)
+print*, "Surface type  = 17, land fraction > 0:", count(surface_type_out == 17 .and. land_fraction > 0)
+print*, "Surface type /= 17, land fraction > 0:", count(surface_type_out /= 17 .and. land_fraction > 0)
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! next check 200x200
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  surface_type_save = surface_type_out
+
+  num_missing = count(surface_type_out == 17 .and. land_fraction > 0)
+  print *, "Num missing before fill: ", num_missing
+  if(num_missing > 0) then
+    do i = 1,idim
+    do j = 1,jdim
+      if(surface_type_out(i,j,1) == 17 .and. land_fraction(i,j,1) > 0) then
+       imax = min(i+200,idim)
+       imin = max(i-200,1)
+       jmax = min(j+200,jdim)
+       jmin = max(j-200,1)
+       countmax = 0
+       maxtype = -1
+       do itype = 1,20
+         countcur = count(surface_type_save(imin:imax,jmin:jmax,1) == itype)
+	 if(countcur > countmax .and. itype /=17) maxtype = itype
+	 if(countcur > countmax .and. itype /=17) countmax = countcur
+       end do
+       if(countmax > 0) then
+         surface_type_out(i,j,1) = maxtype
+       end if
+      end if
+    end do
+    end do
+    print *, "Num missing after fill #2 (200x200): ",count(surface_type_out == 17 .and. land_fraction > 0)
+  end if
+
+!====================================
+! print updated inconsistencies
+
+print*
+print*, "After 200x200 fill"
+print*, "Surface type  = 17, land fraction = 0:", count(surface_type_out == 17 .and. land_fraction == 0)
+print*, "Surface type /= 17, land fraction = 0:", count(surface_type_out /= 17 .and. land_fraction == 0)
+print*, "Surface type  = 17, land fraction > 0:", count(surface_type_out == 17 .and. land_fraction > 0)
+print*, "Surface type /= 17, land fraction > 0:", count(surface_type_out /= 17 .and. land_fraction > 0)
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! next just fill with grass type
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  where(surface_type_out == 17 .and. land_fraction > 0) 
+    surface_type_out = 10
+  end where
+
+!====================================
+! print updated inconsistencies
+
+print*
+print*, "After grassland fill"
+print*, "Surface type  = 17, land fraction = 0:", count(surface_type_out == 17 .and. land_fraction == 0)
+print*, "Surface type /= 17, land fraction = 0:", count(surface_type_out /= 17 .and. land_fraction == 0)
+print*, "Surface type  = 17, land fraction > 0:", count(surface_type_out == 17 .and. land_fraction > 0)
+print*, "Surface type /= 17, land fraction > 0:", count(surface_type_out /= 17 .and. land_fraction > 0)
 
 !====================================
 ! open and fill output file
