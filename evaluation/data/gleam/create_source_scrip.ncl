@@ -3,21 +3,18 @@ load "$NCARG_ROOT/lib/ncarg/nclscripts/esmf/ESMF_regridding.ncl"
 
 begin
 
-       gleam_filename = "/scratch2/NCEPDEV/land/data/evaluation/GLEAM/orig/E/v3.6a/E_1980-2021_GLEAM_v3.6a_MO.nc"
- gleam_scrip_filename = "/scratch2/NCEPDEV/land/data/evaluation/GLEAM/gleam_SCRIP.nc"
-
+  data_source_file = keyword_values("regrid_parameter_assignment","data_source_file"  ,"string")
+   data_scrip_file = keyword_values("regrid_parameter_assignment","data_scrip_file"   ,"string")
 
 ;************************************************
-; get gleam fields
+; get gleam fields, use gleam missing as mask for land grids
 ;************************************************
 
-  gleam_file = addfile(gleam_filename, "r")
-  
+  gleam_file = addfile(data_source_file, "r")
   gleam_var = gleam_file->E(0,:,:)
-  gleam_inv = gleam_var(lat|:,lon|:)
-  gleam_mask = where(ismissing(gleam_inv),0,1)   ; if mask added, then resulting mask will find a source for all destination
+  delete(gleam_var@_FillValue)
+  gleam_mask = where(gleam_var.ne.-999,1,0)   ; if mask added, then resulting mask will find a source for all destination
 
-  
   gleam_lat = gleam_file->lat
 ;  gleam_lat@units = "degrees_north"
   gleam_lon = gleam_file->lon
@@ -31,7 +28,7 @@ begin
   Opt@Title          = "gleam Grid"
   Opt@GridMask       = gleam_mask
 
-  rectilinear_to_SCRIP(gleam_scrip_filename,gleam_lat,gleam_lon,Opt)
+  rectilinear_to_SCRIP(data_scrip_file,gleam_lat,gleam_lon,Opt)
 
 end
 
