@@ -34,14 +34,15 @@
 
 $yyyy = 2026;
 $mm = 5;
-$final_day = 1; # this day only has 00Z time
+$final_day = 2; # this day only has 00Z time
+$pathroot="/scratch4/NCEPDEV/land/data/ufs-land-driver/datm/CORe/original";
 
 for($dd=1; $dd<=$final_day; $dd++)
  {
 
  $netcdf_datestring = "$yyyy-$nums[$mm]-$nums[$dd]";
- $daily_filename = "netcdf_monthly/CORe_forcing_${netcdf_datestring}.nc";
- $monthly_filename = "netcdf_monthly/CORe_forcing_$yyyy-$nums[$mm].nc";
+ $daily_filename = "${pathroot}/netcdf_monthly/CORe_forcing_${netcdf_datestring}.nc";
+ $monthly_filename = "${pathroot}/netcdf_monthly/CORe_forcing_$yyyy-$nums[$mm].nc";
 
  $hh_end = 21;
  if ($dd == $final_day) {$hh_end = 1}
@@ -53,7 +54,7 @@ for($hh=0; $hh<=$hh_end; $hh=$hh+3)
  
  print("Starting $core_datestring \n");
  
- $core_filename = "mem012/flx_${core_datestring}_mem012.grb";
+ $core_filename = "${pathroot}/mem012/flx_${core_datestring}_mem012.grb";
 
  print("Starting $core_filename \n");
 
@@ -76,8 +77,8 @@ for($hh=0; $hh<=$hh_end; $hh=$hh+3)
  }
 
 # create the final monthly file
- system("ncrcat -h netcdf_monthly/CORe_forcing_$yyyy-$nums[$mm]-*.nc $monthly_filename");
- system("rm netcdf_monthly/CORe_forcing_$yyyy-$nums[$mm]-*.nc");
+ system("ncrcat -h ${pathroot}/netcdf_monthly/CORe_forcing_$yyyy-$nums[$mm]-*.nc $monthly_filename");
+ system("rm ${pathroot}/netcdf_monthly/CORe_forcing_$yyyy-$nums[$mm]-*.nc");
 
  system("ncrename -h -v DLWRF_surface,downward_longwave $monthly_filename");
  system("ncrename -h -v DSWRF_surface,downward_solar $monthly_filename");
