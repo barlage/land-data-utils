@@ -17,7 +17,7 @@
 #SBATCH --ntasks=93
 #
 #
-#SBATCH --time=1:00:00
+#SBATCH --time=1:30:00
 
 module purge
 module use /contrib/spack-stack/spack-stack-1.9.2/envs/ue-oneapi-2024.2.1/install/modulefiles/Core
