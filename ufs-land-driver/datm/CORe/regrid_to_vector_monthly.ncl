@@ -62,24 +62,31 @@ numlocs = dimsizes(infile->frac_b)
 do iyyyy = yyyy_beg, yyyy_end
 do imm = mm_beg, mm_end
 
-  numdays = days_in_month(iyyyy,imm)
-
-  time_start = cd_inv_calendar(iyyyy,imm,1,0,0,0,"seconds since 1970-01-01 00:00:00", 0)
-
-  time = new(8*numdays, double)
-    time@units = "seconds since 1970-01-01 00:00:00"
-    time!0 = "time"
-
-  do ihh = 0, 8*numdays-1
-    time(ihh) = time_start + ihh * todouble(3600.0*3)
-  end do
-
   datestring = ""+iyyyy+"-"+tostring_with_format(imm,"%2.2d")
+
+  if(.not.fileexists(datm_source_path+"/CORe_forcing_"+datestring+".nc"))then
+    print(datm_source_path+"/CORe_forcing_"+datestring+".nc does not exist, exit gracefully")
+    exit
+  end if
 
   infile = addfile(datm_source_path+"/CORe_forcing_"+datestring+".nc","r")
   print("Starting: "+datestring)
 
-  solar_radiation = new((/8*numdays,numlocs/), float)
+  times_in_file = getfilevardimsizes(infile,"time")
+
+  numdays = days_in_month(iyyyy,imm)
+
+  time_start = cd_inv_calendar(iyyyy,imm,1,0,0,0,"seconds since 1970-01-01 00:00:00", 0)
+
+  time = new(times_in_file, double)
+    time@units = "seconds since 1970-01-01 00:00:00"
+    time!0 = "time"
+
+  do ihh = 0, times_in_file-1
+    time(ihh) = time_start + ihh * todouble(3600.0*3)
+  end do
+
+  solar_radiation = new((/times_in_file,numlocs/), float)
     solar_radiation@units = "W/m2"
     solar_radiation!0 = "time"
     solar_radiation!1 = "location"
@@ -130,7 +137,7 @@ do imm = mm_beg, mm_end
   var_regrid = ESMF_regrid_with_weights(data,weights_method1_filename,Opt)
 
   if(do_elevation_adjustment) then
-    do itime = 0, 23
+    do itime = 0, times_in_file-1
       var_regrid(itime,:) = var_regrid(itime,:) + elevation_difference * 0.0065
     end do
   end if
