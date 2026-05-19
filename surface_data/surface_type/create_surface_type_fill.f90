@@ -88,8 +88,6 @@ error = nf90_def_var(ncid_out, "vegetation_type", NF90_BYTE, (/ncdim_idim,ncdim_
    call netcdf_err(error, "defining attribute: long_name variable: vegetation_type")
   error = nf90_put_att(ncid_out, varid, "units", "fraction")
    call netcdf_err(error, "defining attribute: units variable: vegetation_type")
-  error = nf90_put_att(ncid_out, varid, "scale_factor", 0.01)
-   call netcdf_err(error, "defining attribute: scale_factor variable: vegetation_type")
 
 error = nf90_put_att(ncid_out, NF90_GLOBAL, "description", "2020 Global water surface fraction (%) product, 7.5 arcsecond, lat/lon original")
  call netcdf_err(error, "defining attribute: description: global")
@@ -221,7 +219,91 @@ print*, "Surface type  = 17, land fraction > 0:", count(surface_type_out == 17 .
 print*, "Surface type /= 17, land fraction > 0:", count(surface_type_out /= 17 .and. land_fraction > 0)
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! next check 100x100
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  surface_type_save = surface_type_out
+
+  num_missing = count(surface_type_out == 17 .and. land_fraction > 0)
+  print *, "Num missing before fill: ", num_missing
+  if(num_missing > 0) then
+    do i = 1,idim
+    do j = 1,jdim
+      if(surface_type_out(i,j,1) == 17 .and. land_fraction(i,j,1) > 0) then
+       imax = min(i+50,idim)
+       imin = max(i-50,1)
+       jmax = min(j+50,jdim)
+       jmin = max(j-50,1)
+       countmax = 0
+       maxtype = -1
+       do itype = 1,20
+         countcur = count(surface_type_save(imin:imax,jmin:jmax,1) == itype)
+	 if(countcur > countmax .and. itype /=17) maxtype = itype
+	 if(countcur > countmax .and. itype /=17) countmax = countcur
+       end do
+       if(countmax > 0) then
+         surface_type_out(i,j,1) = maxtype
+       end if
+      end if
+    end do
+    end do
+    print *, "Num missing after fill #2 (100x100): ",count(surface_type_out == 17 .and. land_fraction > 0)
+  end if
+
+!====================================
+! print updated inconsistencies
+
+print*
+print*, "After 100x100 fill"
+print*, "Surface type  = 17, land fraction = 0:", count(surface_type_out == 17 .and. land_fraction == 0)
+print*, "Surface type /= 17, land fraction = 0:", count(surface_type_out /= 17 .and. land_fraction == 0)
+print*, "Surface type  = 17, land fraction > 0:", count(surface_type_out == 17 .and. land_fraction > 0)
+print*, "Surface type /= 17, land fraction > 0:", count(surface_type_out /= 17 .and. land_fraction > 0)
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! next check 200x200
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  surface_type_save = surface_type_out
+
+  num_missing = count(surface_type_out == 17 .and. land_fraction > 0)
+  print *, "Num missing before fill: ", num_missing
+  if(num_missing > 0) then
+    do i = 1,idim
+    do j = 1,jdim
+      if(surface_type_out(i,j,1) == 17 .and. land_fraction(i,j,1) > 0) then
+       imax = min(i+100,idim)
+       imin = max(i-100,1)
+       jmax = min(j+100,jdim)
+       jmin = max(j-100,1)
+       countmax = 0
+       maxtype = -1
+       do itype = 1,20
+         countcur = count(surface_type_save(imin:imax,jmin:jmax,1) == itype)
+	 if(countcur > countmax .and. itype /=17) maxtype = itype
+	 if(countcur > countmax .and. itype /=17) countmax = countcur
+       end do
+       if(countmax > 0) then
+         surface_type_out(i,j,1) = maxtype
+       end if
+      end if
+    end do
+    end do
+    print *, "Num missing after fill #3 (200x200): ",count(surface_type_out == 17 .and. land_fraction > 0)
+  end if
+
+!====================================
+! print updated inconsistencies
+
+print*
+print*, "After 200x200 fill"
+print*, "Surface type  = 17, land fraction = 0:", count(surface_type_out == 17 .and. land_fraction == 0)
+print*, "Surface type /= 17, land fraction = 0:", count(surface_type_out /= 17 .and. land_fraction == 0)
+print*, "Surface type  = 17, land fraction > 0:", count(surface_type_out == 17 .and. land_fraction > 0)
+print*, "Surface type /= 17, land fraction > 0:", count(surface_type_out /= 17 .and. land_fraction > 0)
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! next check 400x400
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   surface_type_save = surface_type_out
@@ -249,14 +331,14 @@ print*, "Surface type /= 17, land fraction > 0:", count(surface_type_out /= 17 .
       end if
     end do
     end do
-    print *, "Num missing after fill #2 (200x200): ",count(surface_type_out == 17 .and. land_fraction > 0)
+    print *, "Num missing after fill #4 (400x400): ",count(surface_type_out == 17 .and. land_fraction > 0)
   end if
 
 !====================================
 ! print updated inconsistencies
 
 print*
-print*, "After 200x200 fill"
+print*, "After 400x400 fill"
 print*, "Surface type  = 17, land fraction = 0:", count(surface_type_out == 17 .and. land_fraction == 0)
 print*, "Surface type /= 17, land fraction = 0:", count(surface_type_out /= 17 .and. land_fraction == 0)
 print*, "Surface type  = 17, land fraction > 0:", count(surface_type_out == 17 .and. land_fraction > 0)

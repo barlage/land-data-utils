@@ -83,8 +83,6 @@ error = nf90_def_var(ncid_out, "vegetation_type", NF90_BYTE, (/ncdim_idim,ncdim_
    call netcdf_err(error, "defining attribute: long_name variable: vegetation_type")
   error = nf90_put_att(ncid_out, varid, "units", "fraction")
    call netcdf_err(error, "defining attribute: units variable: vegetation_type")
-  error = nf90_put_att(ncid_out, varid, "scale_factor", 0.01)
-   call netcdf_err(error, "defining attribute: scale_factor variable: vegetation_type")
 
 error = nf90_put_att(ncid_out, NF90_GLOBAL, "description", "2020 Global water surface fraction (%) product, 7.5 arcsecond, lat/lon original")
  call netcdf_err(error, "defining attribute: description: global")
